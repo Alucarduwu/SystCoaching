@@ -1,0 +1,327 @@
+<section class="patients-page w-full h-full flex flex-col bg-[#050505] relative overflow-hidden">
+  
+   <!-- Ambient Background -->
+   <div class="absolute top-[-10%] right-[-10%] w-[50%] h-[50%] bg-[#ef4444]/5 rounded-full blur-[120px] pointer-events-none"></div>
+   <div class="absolute bottom-[-5%] left-[-5%] w-[30%] h-[30%] bg-[#ef4444]/3 rounded-full blur-[100px] pointer-events-none"></div>
+
+   <!-- Content Router (List vs Detail) -->
+   <ng-container *ngIf="!selectedProfile(); else patientDetailView">
+     
+     <!-- MAIN LIST AREA -->
+     <div class="flex-1 overflow-hidden z-10">
+        <app-patients-list 
+          [patients]="filteredPatients()" 
+          [search]="patientSearch()"
+          [objectiveFilter]="objectiveFilter()"
+          (searchChange)="setPatientSearch($event)"
+          (objectiveFilterChange)="objectiveFilter.set($event)"
+          (viewPatient)="viewPatient($event)"
+          (createPatient)="openCreateModal()">
+        </app-patients-list>
+     </div>
+   </ng-container>
+
+   <!-- Detail View Template -->
+   <ng-template #patientDetailView>
+     <div class="patient-detail-dashboard w-full h-full flex flex-col animate-fade-in relative z-10 px-4 flex-1 min-h-0 overflow-hidden" *ngIf="selectedProfile()?.patient as patient">
+       
+        <!-- Identity Header Section: UNIFIED HEIGHT & SPACING -->
+        <header class="h-14 shrink-0 flex items-center justify-between gap-2 bg-[#0a0a0a]/60 px-4 rounded-xl border border-white/5 backdrop-blur-md mb-2 mt-1">
+          <div class="flex items-center gap-3">
+            <div (click)="backToList()" class="w-8 h-8 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center hover:bg-white/10 cursor-pointer transition-all mr-1">
+              <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+            </div>
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center text-lg font-black text-white bg-gradient-to-br from-[#ef4444] to-[#991b1b] shadow-lg shadow-[#ef4444]/10 shrink-0">
+              {{ (patient.nombres?.[0] || 'P') + (patient.apellido_paterno?.[0] || '') }}
+            </div>
+
+            <div class="flex flex-col gap-0">
+              <h1 class="text-lg font-black text-white border-l-2 border-red-600 pl-3 ml-1 leading-tight uppercase italic">{{ patient.nombres }} {{ patient.apellido_paterno }}</h1>
+              <div class="flex items-center gap-3 ml-4">
+                  <div class="flex flex-col">
+                    <span class="text-[6px] font-black text-white/20 uppercase tracking-widest leading-none">Edad</span>
+                    <span class="text-[9px] font-black text-white italic uppercase leading-none">{{ patient.edad || '?' }} AÑOS</span>
+                  </div>
+                  <div class="w-px h-3 bg-white/5"></div>
+                  <div class="flex flex-col">
+                    <span class="text-[6px] font-black text-white/20 uppercase tracking-widest leading-none">Sexo</span>
+                    <span class="text-[9px] font-black text-white italic uppercase leading-none">{{ patient.sexo || 'N/D' }}</span>
+                  </div>
+                  <div class="w-px h-3 bg-white/5"></div>
+                  <div class="flex flex-col">
+                    <span class="text-[6px] font-black text-[#ef4444]/50 uppercase tracking-widest leading-none">Estado</span>
+                    <span class="text-[9px] font-black text-[#ef4444] italic uppercase leading-none">ACTIVO</span>
+                  </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button (click)="openMegaPdfModal()" class="h-8 w-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-[#ef4444] hover:text-white transition-all shadow-xl group" title="Generar Reporte Maestro">
+              <svg class="w-3.5 h-3.5 group-hover:rotate-90 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+            </button>
+            <button (click)="startEditPatient()" class="h-8 px-4 rounded-lg bg-white/[0.03] border border-white/10 text-white font-black text-[8px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-xl italic">
+              EDITAR PERFIL
+            </button>
+            <button (click)="deletePatient(patient.id || 0)" class="h-8 w-8 rounded-lg bg-[#ef4444]/10 border border-[#ef4444]/20 text-[#ef4444] flex items-center justify-center hover:bg-[#ef4444] hover:text-white transition-all shadow-xl group">
+              <svg class="w-3.5 h-3.5 group-hover:scale-125 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+            </button>
+          </div>
+        </header>
+
+       <!-- Navigation Tabs -->
+       <div class="flex items-center gap-6 border-b border-white/5 px-4 bg-transparent z-30 shrink-0 mb-1">
+         <button (click)="activeTab.set('overview')" class="pb-3 text-[9px] font-black uppercase tracking-[0.2em] transition-all relative group pt-3 italic" [class.text-white]="activeTab() === 'overview'" [class.text-white/20]="activeTab() !== 'overview'">
+           Visión Global
+           <div *ngIf="activeTab() === 'overview'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ef4444] rounded-full"></div>
+         </button>
+         <button (click)="activeTab.set('diet')" class="pb-3 text-[9px] font-black uppercase tracking-[0.2em] transition-all relative group pt-3 italic" [class.text-white]="activeTab() === 'diet'" [class.text-white/20]="activeTab() !== 'diet'">
+           Nutrición
+           <div *ngIf="activeTab() === 'diet'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ef4444] rounded-full shadow-[0_0_15px_#ef4444]"></div>
+         </button>
+         <button (click)="activeTab.set('exercise')" class="pb-3 text-[9px] font-black uppercase tracking-[0.2em] transition-all relative group pt-3 italic" [class.text-white]="activeTab() === 'exercise'" [class.text-white/20]="activeTab() !== 'exercise'">
+           Entrenamiento
+           <div *ngIf="activeTab() === 'exercise'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ef4444] rounded-full shadow-[0_0_15px_#ef4444]"></div>
+         </button>
+         <button (click)="activeTab.set('measurements')" class="pb-3 text-[9px] font-black uppercase tracking-[0.2em] transition-all relative group pt-3 italic" [class.text-white]="activeTab() === 'measurements'" [class.text-white/20]="activeTab() !== 'measurements'">
+           Expediente & Evolución
+           <div *ngIf="activeTab() === 'measurements'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-[#ef4444] rounded-full shadow-[0_0_15px_#ef4444]"></div>
+         </button>
+         <button (click)="activeTab.set('comparisons')" class="pb-3 text-[9px] font-black uppercase tracking-[0.2em] transition-all relative group pt-3 italic" [class.text-white]="activeTab() === 'comparisons'" [class.text-white/20]="activeTab() !== 'comparisons'">
+           Comparativas
+           <div *ngIf="activeTab() === 'comparisons'" class="absolute bottom-0 left-0 right-0 h-0.5 bg-white/20 rounded-full"></div>
+         </button>
+       </div>
+
+        <!-- Content Area: Constrained to screen height -->
+        <div [ngSwitch]="activeTab()" class="flex-1 overflow-hidden bg-transparent flex flex-col pt-1 w-full min-h-0">
+         
+         <!-- OVERVIEW -->
+         <div *ngSwitchCase="'overview'" class="animate-in fade-in slide-in-from-bottom-2 duration-300 pb-6 w-full">
+            <div class="bg-gradient-to-br from-[#0a0a0a] to-[#111] rounded-2xl p-4 border border-white/5 shadow-2xl w-full">
+               <app-patients-data [patient]="patient" (edit)="startEditPatient()" (back)="backToList()"></app-patients-data>
+            </div>
+         </div>
+
+          <!-- NUTRITION -->
+          <div *ngSwitchCase="'diet'" class="flex-1 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300 pb-6 w-full overflow-hidden">
+             <div class="bg-[#0a0a0a]/40 rounded-2xl border border-white/5 shadow-2xl w-full h-full flex flex-col overflow-hidden">
+               <div class="flex items-center justify-between px-6 py-2 bg-black/20 border-b border-white/5 relative z-20 shrink-0 h-10">
+                 <div class="flex items-center gap-3">
+                   <div class="w-1 h-5 bg-red-600 rounded-full shadow-glow"></div>
+                   <div class="flex flex-col gap-0">
+                     <h3 class="text-xs font-black text-white italic uppercase tracking-tighter leading-none">Nutrición</h3>
+                     <p class="text-[6px] font-black text-white/20 uppercase tracking-[0.4em] italic leading-none mt-0.5">CARGA SISTÉMICA</p>
+                   </div>
+                 </div>
+                 <div class="flex items-center gap-6">
+                   <div class="relative w-64 group">
+                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-white/10 group-focus-within:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                     <input type="text" [ngModel]="dietSearch()" (ngModelChange)="setDietSearch($event)" placeholder="FILTRAR..." class="w-full h-8 pl-9 pr-4 bg-white/[0.02] border border-white/10 rounded-lg text-[8px] font-black uppercase text-white placeholder:text-white/10 focus:border-red-500/30 transition-all outline-none tracking-widest italic">
+                   </div>
+                   <button (click)="openDietModal()" class="h-8 px-4 rounded-lg bg-red-600 text-white font-black text-[8px] uppercase tracking-widest hover:bg-white hover:text-black transition-all italic whitespace-nowrap">+ ASIGNAR</button>
+                 </div>
+               </div>
+               <div class="flex-1 overflow-y-auto custom-scroll p-6 relative z-10">
+                 <div *ngIf="selectedProfile()?.diets?.length === 0" class="flex flex-col items-center justify-center h-full text-white/10 italic">
+                   <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"/></svg>
+                   <p class="text-xs font-black uppercase tracking-widest">Sin protocolos asignados</p>
+                 </div>
+
+                 <div *ngIf="selectedProfile()?.diets?.length || 0 > 0" class="space-y-6">
+                    <!-- NUTRITION HUD: BIG TARGETS -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                      <div class="bg-white/[0.02] p-3 border-l-2 border-l-white/10 rounded-r-lg group">
+                         <span class="text-[7px] font-black text-white/20 uppercase tracking-widest italic group-hover:text-white/40 transition-colors">Kcal Objetivo</span>
+                         <div class="flex items-baseline gap-1 mt-1">
+                           <span class="text-2xl font-black text-white italic leading-none">{{ selectedProfile()?.diets?.[0]?.calorias_totales || 'N/A' }}</span>
+                           <span class="text-[8px] font-black italic text-white/20 uppercase">kcal</span>
+                         </div>
+                      </div>
+                      <div class="bg-white/[0.02] p-3 border-l-2 border-l-red-500 rounded-r-lg group">
+                         <span class="text-[7px] font-black text-red-500/50 uppercase tracking-widest italic group-hover:text-red-500 transition-colors">Proteína</span>
+                         <div class="flex items-baseline gap-1 mt-1">
+                           <span class="text-2xl font-black text-white italic leading-none">{{ selectedProfile()?.diets?.[0]?.proteina_total || 'N/A' }}</span>
+                           <span class="text-[8px] font-black italic text-red-500/50 uppercase">g</span>
+                         </div>
+                      </div>
+                      <div class="bg-white/[0.02] p-3 border-l-2 border-l-blue-500 rounded-r-lg group">
+                         <span class="text-[7px] font-black text-blue-500/50 uppercase tracking-widest italic group-hover:text-blue-500 transition-colors">Carbohidratos</span>
+                         <div class="flex items-baseline gap-1 mt-1">
+                           <span class="text-2xl font-black text-white italic leading-none">{{ selectedProfile()?.diets?.[0]?.carbohidratos_total || 'N/A' }}</span>
+                           <span class="text-[8px] font-black italic text-blue-500/50 uppercase">g</span>
+                         </div>
+                      </div>
+                      <div class="bg-white/[0.02] p-3 border-l-2 border-l-yellow-500 rounded-r-lg group">
+                         <span class="text-[7px] font-black text-yellow-500/50 uppercase tracking-widest italic group-hover:text-yellow-500 transition-colors">Grasas Totales</span>
+                         <div class="flex items-baseline gap-1 mt-1">
+                           <span class="text-2xl font-black text-white italic leading-none">{{ selectedProfile()?.diets?.[0]?.grasas_total || 'N/A' }}</span>
+                           <span class="text-[8px] font-black italic text-yellow-500/50 uppercase">g</span>
+                         </div>
+                      </div>
+                    </div>
+
+                    <!-- RECENT PROTOCOLS LIST -->
+                    <div class="flex items-center gap-2 mb-4">
+                      <div class="w-1 h-3 bg-white/20"></div>
+                      <h4 class="text-xs font-black uppercase italic text-white/50">Historial de Estrategias</h4>
+                    </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
+                      <app-diet-card *ngFor="let diet of selectedProfile()?.diets" [diet]="diet" (view)="viewDiet($event)" (edit)="openDietModal($event)" (delete)="deleteDiet($event)"></app-diet-card>
+                    </div>
+                 </div>
+               </div>
+             </div>
+          </div>
+
+          <!-- TRAINING -->
+          <div *ngSwitchCase="'exercise'" class="flex-1 flex flex-col animate-in fade-in slide-in-from-bottom-2 duration-300 pb-6 w-full overflow-hidden">
+             <div class="bg-[#0a0a0a]/40 rounded-2xl border border-white/5 shadow-2xl w-full h-full flex flex-col overflow-hidden">
+               <div class="flex items-center justify-between px-6 py-2 bg-black/20 border-b border-white/5 relative z-20 shrink-0 h-10">
+                 <div class="flex items-center gap-3">
+                   <div class="w-1 h-5 bg-blue-600 rounded-full shadow-glow"></div>
+                   <div class="flex flex-col gap-0">
+                     <h3 class="text-xs font-black text-white italic uppercase tracking-tighter leading-none">Entrenamiento</h3>
+                     <p class="text-[6px] font-black text-white/20 uppercase tracking-[0.4em] italic leading-none mt-0.5">MATRIZ TÁCTICA</p>
+                   </div>
+                 </div>
+                 <div class="flex items-center gap-6">
+                   <div class="relative w-64 group">
+                      <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-white/10 group-focus-within:text-blue-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                      <input type="text" [ngModel]="routineSearch()" (ngModelChange)="setRoutineSearch($event)" placeholder="FILTRAR..." class="w-full h-8 pl-9 pr-4 bg-white/[0.02] border border-white/10 rounded-lg text-[8px] font-black uppercase text-white placeholder:text-white/10 focus:border-blue-500/30 transition-all outline-none tracking-widest italic">
+                    </div>
+                    <button (click)="openRoutineModal()" class="h-8 px-4 rounded-lg bg-blue-600 text-white font-black text-[8px] uppercase tracking-widest hover:bg-white hover:text-black transition-all italic whitespace-nowrap">+ ASIGNAR</button>
+                 </div>
+               </div>
+               <div class="flex-1 overflow-y-auto custom-scroll p-6 relative z-10">
+                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+                   <div *ngIf="filteredRoutines().length === 0" class="md:col-span-2 lg:col-span-3 py-20 border border-dashed border-white/10 rounded-2xl flex flex-col items-center justify-center gap-4">
+                     <div class="text-6xl opacity-20 text-blue-500">🏋️</div>
+                     <p class="text-[12px] font-black text-white/20 uppercase tracking-widest">No hay sistemas activos</p>
+                   </div>
+                   <div *ngFor="let routine of filteredRoutines()" class="w-full">
+                     <app-routine-card [routine]="routine" (view)="viewRoutine($event)" (edit)="openRoutineModal($event)" (delete)="deleteRoutine($event)"></app-routine-card>
+                   </div>
+                 </div>
+               </div>
+             </div>
+          </div>
+
+          <!-- EXPEDIENTE & EVOLUCIÓN -->
+           <div *ngSwitchCase="'measurements'" class="flex-1 flex flex-col animate-fade-in pb-6 w-full overflow-hidden">
+              <div class="bg-[#0a0a0a]/40 rounded-2xl border border-white/5 shadow-2xl w-full h-full flex flex-col overflow-hidden">
+                
+                <div class="flex items-center justify-between px-6 py-2 bg-black/20 border-b border-white/5 relative z-20 shrink-0 h-10">
+                  <div class="flex items-center gap-3">
+                    <div class="w-1 h-5 bg-emerald-600 rounded-full shadow-glow"></div>
+                    <div class="flex flex-col gap-0">
+                      <h3 class="text-xs font-black text-white italic uppercase tracking-tighter leading-none">Biometría</h3>
+                      <p class="text-[6px] font-black text-white/20 uppercase tracking-[0.4em] italic leading-none mt-0.5">EVOLUCIÓN CRÍTICA</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-6">
+                     <div class="relative w-64 group">
+                       <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-2.5 h-2.5 text-white/10 group-focus-within:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                       <input type="text" [ngModel]="measurementSearch()" (ngModelChange)="setMeasurementSearch($event)" placeholder="FILTRAR..." class="w-full h-8 pl-9 pr-4 bg-white/[0.02] border border-white/10 rounded-lg text-[8px] font-black uppercase text-white placeholder:text-white/10 focus:border-emerald-500/30 transition-all outline-none tracking-widest italic">
+                     </div>
+                     <button (click)="openMeasurementModal()" class="h-8 px-4 rounded-lg bg-emerald-600 text-white font-black text-[8px] uppercase tracking-widest hover:bg-white hover:text-black transition-all italic whitespace-nowrap">+ NUEVO</button>
+                  </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto custom-scroll p-6 relative z-10">
+                  <div class="flex flex-col gap-0">
+                     <app-patient-measurements-section 
+                        [measurements]="selectedProfile()?.measurements || []" 
+                        [hideHeader]="true" 
+                        [search]="measurementSearch()" 
+                        [expandedMeasurements]="expandedMeasurements()" 
+                        (searchChange)="setMeasurementSearch($event)" 
+                        (toggleExpand)="toggleMeasurementExpand($event)" 
+                        (triggerPhotoInput)="triggerMeasurementPhotoInput($event)" 
+                        (uploadPhotos)="uploadPhotosForMeasurement($event.measurement, $event.event)" 
+                        (openPhotoPreview)="openPhotoPreview($event)" 
+                        (deletePhoto)="deleteMeasurementPhoto($event)" 
+                        (deleteMeasurement)="deleteMeasurement($event)" 
+                        (editMeasurement)="startEditMeasurement($event)" 
+                        (downloadPdf)="downloadMeasurementPdf($event)">
+                     </app-patient-measurements-section>
+                  </div>
+                </div>
+              </div>
+           </div>
+
+          <!-- COMPARATIVAS -->
+          <div *ngSwitchCase="'comparisons'" class="flex-1 flex flex-col animate-in fade-in duration-300 pb-6 w-full overflow-hidden">
+             <div class="elite-section-header">
+                 <div class="elite-header-title-zone">
+                   <div class="w-1.5 h-8 bg-white/10 rounded-full"></div>
+                   <h3 class="text-h2 text-white">Comparativa</h3>
+                 </div>
+                 <div class="elite-header-action-zone">
+                   <p class="text-kicker">Análisis de Progreso Crítico</p>
+                 </div>
+             </div>
+             <div class="flex-1 overflow-y-auto custom-scroll p-6 space-y-8">
+                <div class="bg-[#0a0a0a]/60 rounded-2xl p-6 border border-white/5 shadow-2xl w-full">
+                  <app-patient-comparison-v2 [patientProfile]="selectedProfile()?.patient || null" [measurements]="selectedProfile()?.measurements || []" (pdfGenerated)="onPdfGenerated()"></app-patient-comparison-v2>
+                </div>
+                <div class="flex flex-col gap-4">
+                  <div class="flex items-center justify-between px-2">
+                    <h3 class="text-[10px] font-black text-white/30 uppercase tracking-[0.3em] italic">Bóveda de Documentos</h3>
+                    <span class="text-[8px] font-bold text-white/10 uppercase">{{ comparativeDocuments().length }} ARCHIVOS</span>
+                  </div>
+                  <div *ngIf="comparativeDocuments().length === 0" class="py-16 border border-dashed border-white/5 rounded-2xl bg-white/[0.01] flex flex-col items-center justify-center gap-3">
+                    <p class="text-[9px] font-black text-white/20 uppercase tracking-[0.3em] italic">Sin registros generados</p>
+                  </div>
+                  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <article *ngFor="let doc of comparativeDocuments()" class="group bg-[#0d0d0d] border border-white/5 rounded-2xl p-5 flex flex-col gap-5 hover:border-elite-accent/40 transition-all duration-500 shadow-2xl relative overflow-hidden">
+                      <!-- Status Indicator -->
+                      <div class="absolute top-0 right-0 w-16 h-16 bg-elite-accent/5 rounded-bl-[40px] blur-2xl pointer-events-none group-hover:bg-elite-accent/10 transition-all"></div>
+                      
+                      <div class="flex flex-col gap-3 relative z-10">
+                        <div class="flex items-center justify-between">
+                          <div class="flex items-center gap-2">
+                            <div class="w-1 h-3 bg-elite-accent rounded-full"></div>
+                            <span class="text-[8px] font-black text-white/50 uppercase tracking-[0.2em] italic">Reporte de Auditoría</span>
+                          </div>
+                          <span class="text-[9px] font-black text-white/20 font-mono tracking-tighter">{{ formatDateMinimal(doc.created_at || doc.date) }}</span>
+                        </div>
+                        <h4 class="text-[11px] font-black text-white uppercase italic leading-tight tracking-tight line-clamp-2 min-h-[2.4em]" [title]="doc.nombre">{{ doc.nombre }}</h4>
+                      </div>
+
+                      <div class="flex items-center gap-2 relative z-10">
+                        <button (click)="openGeneratedDocument(doc)" class="flex-1 bg-white/[0.03] hover:bg-white text-white hover:text-black text-[9px] font-black h-10 rounded-xl uppercase tracking-widest transition-all border border-white/10 italic">EXPLORAR PDF</button>
+                        <button (click)="deleteGeneratedDocument(doc.id)" class="w-10 h-10 flex items-center justify-center rounded-xl bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white transition-all border border-red-500/20 group/del">
+                          <svg class="w-3.5 h-3.5 group-hover/del:scale-110 transition-transform" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </button>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+             </div>
+          </div>
+        </div>
+     </div>
+   </ng-template>
+
+  <!-- Modals Overlay System -->
+  <app-patient-create-modal [open]="showCreateModal()" [saving]="saving()" [patientForm]="newPatient" [measurementForm]="newMeasurement" (fieldChange)="onMeasurementFieldChange(newMeasurement)" (close)="closeCreateModal()" (save)="createPatientWithMeasurement()"></app-patient-create-modal>
+  <app-measurement-create-modal [open]="showMeasurementModal()" [saving]="savingMeasurement()" [isEditing]="editingMeasurement()" [form]="newFollowupMeasurement" (fieldChange)="onMeasurementFieldChange(newFollowupMeasurement)" (close)="closeMeasurementModal()" (save)="saveFollowupMeasurement()"></app-measurement-create-modal>
+  <app-patient-edit-drawer [open]="editingPatient()" [updating]="updatingPatient()" [form]="editPatientForm" (close)="cancelEditPatient()" (save)="savePatientEdits()"></app-patient-edit-drawer>
+  <app-diet-assignment-modal [open]="showDietModal()" [patientId]="selectedProfile()?.patient?.id || 0" [dietToEdit]="dietToEdit()" (close)="closeDietModal()" (saved)="onDietSaved()"></app-diet-assignment-modal>
+  <app-routine-assignment-modal [open]="showRoutineModal()" [patientId]="selectedProfile()?.patient?.id || 0" [routineToEdit]="routineToEdit()" (close)="closeRoutineModal()" (saved)="onRoutineSaved()"></app-routine-assignment-modal>
+  <app-mega-pdf-modal [open]="showMegaPdfModal()" [patientId]="selectedProfile()?.patient?.id" [measurements]="selectedProfile()?.measurements || []" (close)="closeMegaPdfModal()" (saved)="onPdfGenerated()"></app-mega-pdf-modal>
+
+  <!-- Photo Preview System -->
+  <div class="modal-backdrop fixed inset-0 z-[200] bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-fade-in" *ngIf="previewPhoto()" (click)="closePhotoPreview()">
+    <div class="modal-window max-w-2xl bg-[#0a0a0a] border border-white/10 overflow-hidden rounded-3xl relative" (click)="$event.stopPropagation()">
+      <div class="modal-header border-b border-white/5 p-6 flex justify-between items-center bg-black/50 backdrop-blur-md">
+        <h3 class="text-[12px] font-black text-white uppercase tracking-widest italic">Previsualización Crítica</h3>
+        <button (click)="closePhotoPreview()" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:bg-red-600 hover:text-white transition-all">&times;</button>
+      </div>
+      <div class="p-4">
+        <img class="max-h-[70vh] rounded-xl border border-white/10 shadow-2xl mx-auto" [src]="previewPhoto()?.image_url" />
+      </div>
+    </div>
+  </div>
+</section>

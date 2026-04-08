@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SystCoaching - Iniciando</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #050506;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            -webkit-app-region: drag;
+        }
+
+        .container {
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .logo-container {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(220, 38, 38, 0.1);
+            border-left-color: #dc2626;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 20px;
+            font-style: italic;
+            background: linear-gradient(to right, #ffffff, #666666);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .status-text {
+          font-size: 8px;
+          text-transform: uppercase;
+          letter-spacing: 3px;
+          color: rgba(255, 255, 255, 0.3);
+          margin-top: 15px;
+          font-weight: 800;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: rgba(220, 38, 38, 0.2);
+            filter: blur(40px);
+            border-radius: 50%;
+            z-index: -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo-container">
+            <div class="spinner"></div>
+            <div class="glow"></div>
+        </div>
+        <div class="logo-text">SystCoaching</div>
+        <div class="status-text">Iniciando Centro de Comando...</div>
+    </div>
+</body>
+</html>

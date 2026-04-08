@@ -1,0 +1,118 @@
+<div class="patient-data-detail animate-fade-in w-full h-full flex flex-col gap-5 pt-2 pb-10 relative z-10" *ngIf="patient">
+
+  <!-- TOP HUD: CLINICAL OBJECTIVE (Focus) -->
+  <header class="card compact border-l-4 border-l-accent p-4">
+    <div class="flex flex-col gap-1">
+      <span class="label">Objetivo Clínico Primario</span>
+      <h2 class="section-title text-xl text-white">{{ patient.objetivo || 'N/A' }}</h2>
+      <p class="text-[9px] font-bold text-text-secondary uppercase tracking-[0.2em] italic mt-1">Estrategia Operativa Base</p>
+    </div>
+  </header>
+
+  <!-- MAIN CLINICAL GRID (3 Cols Desktop) -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    
+    <!-- BLOCK 1: DATOS PERSONALES -->
+    <div class="card p-4 space-y-4">
+      <div class="flex items-center gap-2 border-b border-border pb-2">
+        <div class="w-1 h-3 bg-accent rounded-full"></div>
+        <h3 class="text-xs font-black uppercase italic text-white/50">Datos Personales</h3>
+      </div>
+      <div class="grid gap-3">
+        <div class="flex flex-col">
+          <span class="label">Nombre Completo</span>
+          <span class="text-xs font-bold text-white uppercase italic">{{ patient.nombres || 'N/A' }} {{ patient.apellido_paterno || 'N/A' }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="label">Contacto / Email</span>
+          <span class="text-xs font-bold text-white uppercase italic">{{ patient.email || 'N/A' }}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col">
+            <span class="label">Edad</span>
+            <span class="text-xs font-bold text-white uppercase italic">{{ patient.edad || 'N/A' }} Años</span>
+          </div>
+          <div class="flex flex-col">
+            <span class="label">Sexo</span>
+            <span class="text-xs font-bold text-white uppercase italic">{{ patient.sexo || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCK 2: PERFIL CLÍNICO -->
+    <div class="card p-4 space-y-4">
+      <div class="flex items-center gap-2 border-b border-border pb-2">
+        <div class="w-1 h-3 bg-blue-500 rounded-full"></div>
+        <h3 class="text-xs font-black uppercase italic text-white/50">Perfil Clínico</h3>
+      </div>
+      <div class="grid gap-3">
+        <div class="flex flex-col">
+          <span class="label">Padecimientos</span>
+          <span class="text-xs font-bold text-text-secondary uppercase italic leading-tight">{{ patient.padecimientos || 'N/A' }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="label text-accent">Alergias Detectadas</span>
+          <span class="text-xs font-bold text-white uppercase italic leading-tight">{{ patient.alergias || 'N/A' }}</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="label">Medicamentación</span>
+          <span class="text-xs font-bold text-text-secondary uppercase italic leading-tight">{{ patient.medicamentos || 'N/A' }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCK 3: ESTADO ANTROPOMÉTRICO -->
+    <div class="card p-4 space-y-4">
+      <div class="flex items-center gap-2 border-b border-border pb-2">
+        <div class="w-1 h-3 bg-emerald-500 rounded-full"></div>
+        <h3 class="text-xs font-black uppercase italic text-white/50">Métricas Base</h3>
+      </div>
+      <div class="grid grid-cols-2 gap-x-4 gap-y-3">
+        <div class="flex flex-col border-l border-white/5 pl-3">
+          <span class="label">Peso</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-lg font-black text-white italic leading-none">{{ (patient.antropometria?.peso_actual_kg || 'N/A') }}</span>
+            <span class="text-[8px] font-black text-emerald-500 uppercase italic">kg</span>
+          </div>
+        </div>
+        <div class="flex flex-col border-l border-white/5 pl-3">
+          <span class="label">Estatura</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-lg font-black text-white italic leading-none">{{ patient.estatura_cm || 'N/A' }}</span>
+            <span class="text-[8px] font-black text-blue-500 uppercase italic">cm</span>
+          </div>
+        </div>
+        <div class="flex flex-col border-l border-white/5 pl-3">
+          <span class="label">BF%</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-lg font-black text-white italic leading-none">{{ (patient.antropometria?.bf_porcentaje || 'N/A') }}</span>
+            <span class="text-[8px] font-black text-orange-500 uppercase italic">%</span>
+          </div>
+        </div>
+        <div class="flex flex-col border-l border-white/5 pl-3">
+          <span class="label">Masa Magra</span>
+          <div class="flex items-baseline gap-1">
+            <span class="text-lg font-black text-white italic leading-none">{{ (patient.antropometria?.masa_magra_kg || 'N/A') }}</span>
+            <span class="text-[8px] font-black text-cyan-500 uppercase italic">kg</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- NOTES / OBSERVATIONS (Full Width) -->
+  <div class="card compact bg-white/[0.01] border-dashed border-white/10">
+    <span class="label ml-2">Bitácora de Observaciones Clínicas</span>
+    <p class="text-xs italic text-text-secondary p-2 leading-relaxed">
+      "{{ patient.notas || 'N/A' }}"
+    </p>
+  </div>
+</div>
+
+<!-- Loading placeholder -->
+<div *ngIf="!patient" class="flex flex-col items-center justify-center p-10 animate-pulse">
+  <div class="w-16 h-16 border-4 border-[#ef4444]/20 border-t-[#ef4444] rounded-full animate-spin"></div>
+  <p class="text-[11px] font-bold text-slate-500 uppercase tracking-widest mt-8">Cargando expediente...</p>
+</div>

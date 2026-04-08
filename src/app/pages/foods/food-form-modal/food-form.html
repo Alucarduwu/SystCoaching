@@ -1,0 +1,125 @@
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-4" *ngIf="open" (click)="close.emit()">
+  <div class="absolute inset-0 bg-black/90 backdrop-blur-md animate-fade-in"></div>
+  
+  <div class="relative w-full max-w-lg bg-[#0a0a0a] rounded-2xl border border-white/10 shadow-2xl overflow-hidden animate-zoom-in flex flex-col max-h-[90vh]" (click)="$event.stopPropagation()">
+    <!-- Header -->
+    <header class="p-8 border-b border-white/5 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <div class="w-1.5 h-8 bg-[#ef4444] rounded-full"></div>
+        <div>
+          <span class="text-[10px] font-bold text-[#ef4444] uppercase tracking-widest">{{ isEditing ? 'Edición' : 'Nuevo Alimento' }}</span>
+          <h2 class="text-xl font-bold text-white uppercase tracking-tight leading-none mt-1">{{ isEditing ? 'Editar Alimento' : 'Registrar Alimento' }}</h2>
+        </div>
+      </div>
+      <button (click)="close.emit()" class="w-10 h-10 rounded-xl bg-white/[0.03] text-white/20 hover:text-white transition-all flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+      </button>
+    </header>
+
+    <div class="p-8 overflow-y-auto custom-scroll flex-1 space-y-8">
+      <!-- Icon & Name Section -->
+      <div class="space-y-6">
+        <div class="space-y-3">
+          <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">Icono</label>
+          <div class="flex flex-wrap gap-2">
+            <button
+              *ngFor="let icon of icons"
+              type="button"
+              class="w-10 h-10 rounded-xl bg-white/[0.03] border border-white/10 flex items-center justify-center text-lg transition-all hover:bg-white/10"
+              [class.ring-2]="form.icono === icon"
+              [class.ring-[#FF3131]]="form.icono === icon"
+              [class.bg-[#FF3131]/10]="form.icono === icon"
+              (click)="selectIcon(icon)"
+            >
+              {{ icon }}
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">Nombre del Alimento</label>
+          <input type="text" class="w-full h-14 px-6 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-white focus:border-[#FF3131] outline-none transition-all uppercase" [(ngModel)]="form.nombre" placeholder="Ej. Pechuga de Pollo" />
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-6">
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">Categoría</label>
+          <select class="w-full h-14 px-6 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-white focus:border-[#FF3131] outline-none transition-all cursor-pointer" [(ngModel)]="form.categoria">
+            <option value="Sin Categoría" class="text-black">Sin Categoría</option>
+            <option value="Proteínas" class="text-black">Proteínas</option>
+            <option value="Carbohidratos" class="text-black">Carbohidratos</option>
+            <option value="Grasas saludables" class="text-black">Grasas saludables</option>
+            <option value="Frutas" class="text-black">Frutas</option>
+            <option value="Verduras" class="text-black">Verduras</option>
+            <option value="Lácteos" class="text-black">Lácteos</option>
+            <option value="Legumbres" class="text-black">Legumbres</option>
+            <option value="Cereales y granos" class="text-black">Cereales y granos</option>
+            <option value="Semillas y frutos secos" class="text-black">Semillas y frutos secos</option>
+            <option value="Azúcares y endulzantes" class="text-black">Azúcares y endulzantes</option>
+            <option value="Bebidas" class="text-black">Bebidas</option>
+            <option value="Alimentos procesados" class="text-black">Alimentos procesados</option>
+            <option value="Alimentos ultraprocesados" class="text-black">Alimentos ultraprocesados</option>
+            <option value="Condimentos y especias" class="text-black">Condimentos y especias</option>
+            <option value="Suplementos alimenticios" class="text-black">Suplementos alimenticios</option>
+          </select>
+        </div>
+        <div class="space-y-2">
+          <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">Porción Base (g)</label>
+          <input type="number" class="w-full h-14 px-6 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-white focus:border-[#FF3131] outline-none transition-all" [(ngModel)]="form.porcion_base_g" placeholder="100" />
+        </div>
+      </div>
+
+      <!-- MACROS SECTION -->
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <span class="text-[10px] font-bold text-white/20 uppercase tracking-widest">Información Nutricional (por 100g)</span>
+          <div class="flex-1 h-px bg-white/5"></div>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">KCAL</label>
+            <input type="number" [(ngModel)]="form.kcal_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Prot (g)</label>
+            <input type="number" [(ngModel)]="form.proteina_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Carbs (g)</label>
+            <input type="number" [(ngModel)]="form.carbohidratos_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Grasa (g)</label>
+            <input type="number" [(ngModel)]="form.grasas_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Fibra (g)</label>
+            <input type="number" [(ngModel)]="form.fibra_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Sodio (mg)</label>
+            <input type="number" [(ngModel)]="form.sodio_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+          <div class="p-4 bg-white/[0.02] border border-white/5 rounded-xl flex flex-col md:col-span-2 items-center group/field hover:border-[#FF3131]/20 transition-all">
+            <label class="text-[8px] font-bold text-white/40 uppercase tracking-widest group-hover/field:text-[#FF3131]">Azúcar (g)</label>
+            <input type="number" [(ngModel)]="form.azucar_100g" class="w-full bg-transparent text-center text-lg font-black text-white outline-none focus:text-[#FF3131] transition-colors" placeholder="0" />
+          </div>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <label class="text-[10px] font-bold text-white/30 uppercase tracking-widest ml-1">Notas / Observaciones</label>
+        <textarea class="w-full p-6 bg-white/[0.03] border border-white/10 rounded-xl text-sm font-medium text-white focus:border-[#FF3131] outline-none transition-all min-h-[100px]" [(ngModel)]="form.notas" placeholder="Instrucciones o detalles..."></textarea>
+      </div>
+    </div>
+
+    <footer class="p-8 border-t border-white/5 flex gap-4">
+      <button (click)="close.emit()" class="flex-1 h-12 rounded-xl text-[11px] font-bold text-slate-500 uppercase tracking-widest hover:text-white transition-all">Cancelar</button>
+      <button class="flex-1 h-12 rounded-xl bg-[#ef4444] text-white font-bold text-[11px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-lg active:scale-95 disabled:opacity-50" [disabled]="saving" (click)="save.emit()">
+        {{ saving ? 'Guardando...' : (isEditing ? 'Guardar Cambios' : 'Registrar') }}
+      </button>
+    </footer>
+  </div>
+</div>

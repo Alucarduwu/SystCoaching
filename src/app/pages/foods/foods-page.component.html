@@ -1,0 +1,125 @@
+<section class="foods-page h-screen overflow-hidden bg-transparent text-white p-8 animate-fade-in relative flex flex-col">
+  
+  <!-- Compact Header & Toolbar Section -->
+  <div class="z-20 bg-[#050505]/80 backdrop-blur-md pb-6 shrink-0">
+    <header class="flex flex-col md:flex-row items-center justify-between mb-8 gap-6 pt-2">
+      <div class="flex flex-col gap-1">
+        <div class="flex items-center gap-3 border-l-4 border-[#ef4444] pl-5">
+          <h1 class="text-3xl font-black text-white tracking-tighter leading-none uppercase">Catálogo de Alimentos</h1>
+        </div>
+        <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-2 ml-5">Gestión de macros y equivalentes nutricionales pro</p>
+      </div>
+   
+      <button
+        type="button"
+        (click)="openCreateFoodModal()"
+        class="h-11 px-8 rounded-xl bg-[#ef4444] text-white font-bold text-[11px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-lg active:scale-95 flex items-center gap-3"
+      >
+        <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" />
+        </svg>
+        Nuevo Alimento
+      </button>
+    </header>
+
+    <div class="flex flex-col lg:flex-row items-center justify-between gap-8 p-6 bg-white/[0.02] border border-white/5 rounded-2xl">
+      <!-- Stats Area (Now at Top) -->
+      <div class="flex items-center gap-12">
+        <div class="flex flex-col gap-1">
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Total Alimentos</span>
+          <span class="text-3xl font-bold text-white tracking-tight">{{ filteredFoods().length }}</span>
+        </div>
+        <div class="w-px h-10 bg-white/10"></div>
+        <div class="flex flex-col gap-1">
+          <span class="text-[9px] font-bold text-slate-500 uppercase tracking-[0.2em]">Actualizados Hoy</span>
+          <span class="text-3xl font-bold text-[#00e5ff] tracking-tight">0</span>
+        </div>
+      </div>
+
+      <!-- Search & Category Filter -->
+      <div class="flex flex-1 flex-col md:flex-row items-center justify-end gap-4 w-full lg:w-auto">
+        
+        <!-- Category Dropdown -->
+        <div class="relative w-full md:w-48 group">
+          <select 
+            [ngModel]="categoryFilter()" 
+            (ngModelChange)="categoryFilter.set($event)"
+            class="w-full h-12 px-6 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-bold text-white uppercase tracking-widest focus:outline-none focus:border-[#ef4444]/30 transition-all cursor-pointer appearance-none shadow-xl"
+          >
+            <option value="Todos" class="text-black">Todas las Categorías</option>
+            <option value="Proteínas" class="text-black">Proteínas</option>
+            <option value="Carbohidratos" class="text-black">Carbohidratos</option>
+            <option value="Grasas saludables" class="text-black">Grasas saludables</option>
+            <option value="Frutas" class="text-black">Frutas</option>
+            <option value="Verduras" class="text-black">Verduras</option>
+            <option value="Lácteos" class="text-black">Lácteos</option>
+            <option value="Legumbres" class="text-black">Legumbres</option>
+            <option value="Cereales y granos" class="text-black">Cereales y granos</option>
+            <option value="Semillas y frutos secos" class="text-black">Semillas y frutos secos</option>
+            <option value="Azúcares y endulzantes" class="text-black">Azúcares y endulzantes</option>
+            <option value="Bebidas" class="text-black">Bebidas</option>
+            <option value="Alimentos procesados" class="text-black">Alimentos procesados</option>
+            <option value="Alimentos ultraprocesados" class="text-black">Alimentos ultraprocesados</option>
+            <option value="Condimentos y especias" class="text-black">Condimentos y especias</option>
+            <option value="Suplementos alimenticios" class="text-black">Suplementos alimenticios</option>
+          </select>
+          <div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-white/20">
+             <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="m19.5 8.25-7.5 7.5-7.5-7.5" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+          </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="relative w-full md:w-80 group">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-[#ef4444] transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <input
+            type="text"
+            class="w-full h-12 pl-12 pr-6 bg-white/[0.03] border border-white/10 rounded-xl text-[11px] font-bold text-white placeholder:text-white/20 focus:outline-none focus:border-[#ef4444]/30 transition-all uppercase tracking-widest"
+            [ngModel]="foodSearch()"
+            (ngModelChange)="setFoodSearch($event)"
+            placeholder="Buscar alimento o macros..."
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scrollable Content Section -->
+  <div class="flex-1 overflow-y-auto custom-scroll pr-4 mt-8">
+    <div class="animate-fade-in relative z-10 pb-20">
+      <!-- Loading State -->
+      <div *ngIf="loading()" class="py-24 flex flex-col items-center justify-center gap-4">
+        <div class="w-10 h-10 border-2 border-white/5 border-t-[#ef4444] rounded-full animate-spin"></div>
+        <p class="text-[10px] font-bold text-white/30 uppercase tracking-widest">Sincronizando biblioteca...</p>
+      </div>
+
+      <!-- Empty State -->
+      <div *ngIf="!loading() && filteredFoods().length === 0" class="py-32 flex flex-col items-center justify-center text-center bg-[#0a0a0a] border border-white/5 rounded-2xl">
+        <div class="text-4xl mb-6 opacity-20">🍽️</div>
+        <h3 class="text-sm font-bold text-white uppercase tracking-widest mb-1">Sin registros</h3>
+        <p class="text-[11px] text-white/30">No se han encontrado alimentos en la biblioteca técnica.</p>
+      </div>
+
+      <!-- Grid Layout -->
+      <div *ngIf="!loading() && filteredFoods().length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <app-food-card
+          *ngFor="let food of filteredFoods()"
+          [food]="food"
+          (edit)="openEditFoodModal(food)"
+          (delete)="deleteFood(food.id)"
+        >
+        </app-food-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- Form Modal Overlay -->
+  <app-food-form-modal
+    [open]="showFoodModal()"
+    [saving]="isSubmitting"
+    [form]="activeFoodForm"
+    [isEditing]="editingFood()"
+    (close)="closeFoodModal()"
+    (save)="saveFood()"
+  >
+  </app-food-form-modal>
+</section>

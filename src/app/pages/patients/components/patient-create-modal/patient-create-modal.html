@@ -1,0 +1,149 @@
+<div class="modal-backdrop fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm p-4 md:p-6 flex items-center justify-center animate-fade-in" *ngIf="open" (click)="onClose()">
+  <div class="modal-window w-full max-w-4xl bg-[#111] border border-white/[0.03] rounded-2xl shadow-2xl shadow-black relative overflow-hidden flex flex-col max-h-[90vh]" (click)="$event.stopPropagation()">
+    
+    <!-- UNIFIED SLIM HEADER -->
+    <header class="h-20 px-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#0a0a0a]">
+      <div class="flex items-center gap-4">
+        <div class="w-1.5 h-8 bg-[#ef4444] rounded-full shadow-glow"></div>
+        <div class="flex flex-col">
+          <h2 class="text-h2 text-white">Nuevo Expediente</h2>
+          <p class="text-kicker mt-0.5">{{ fullName() || 'Sincronización Clínica' }}</p>
+        </div>
+      </div>
+      <button type="button" class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:bg-[#ef4444] hover:text-white transition-all shadow-xl" (click)="onClose()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+      </button>
+    </header>
+
+    <!-- Content -->
+    <div class="flex-1 overflow-y-auto custom-scroll p-6 md:p-8">
+
+      <form class="space-y-8">
+        <!-- Personal Data Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Nombre(s)</label>
+            <input type="text" [(ngModel)]="patientForm.nombres" name="nombres" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold placeholder:text-white/10 focus:border-[#ef4444]/50 outline-none transition-all" placeholder="Ej. Juan">
+          </div>
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Apellido Paterno</label>
+            <input type="text" [(ngModel)]="patientForm.apellido_paterno" name="apP" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold placeholder:text-white/10 focus:border-[#ef4444]/50 outline-none transition-all" placeholder="...">
+          </div>
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Apellido Materno</label>
+            <input type="text" [(ngModel)]="patientForm.apellido_materno" name="apM" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold placeholder:text-white/10 focus:border-[#ef4444]/50 outline-none transition-all" placeholder="...">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Edad (Años)</label>
+            <input type="number" [(ngModel)]="patientForm.edad" name="edad" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all">
+          </div>
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Estatura (cm)</label>
+            <input type="number" [(ngModel)]="patientForm.estatura_cm" name="alt" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all">
+          </div>
+          <div class="group md:col-span-2">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Sexo / Identidad Género</label>
+            <div class="grid grid-cols-2 gap-3">
+              <button type="button" (click)="patientForm.sexo = 'Masculino'" [class.bg-white]="patientForm.sexo === 'Masculino'" [class.text-black]="patientForm.sexo === 'Masculino'" class="h-11 rounded-xl border border-white/5 text-[10px] font-black uppercase tracking-widest transition-all">Masculino</button>
+              <button type="button" (click)="patientForm.sexo = 'Femenino'" [class.bg-white]="patientForm.sexo === 'Femenino'" [class.text-black]="patientForm.sexo === 'Femenino'" class="h-11 rounded-xl border border-white/5 text-[10px] font-black uppercase tracking-widest transition-all">Femenino</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+           <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Email Clínico / Usuario</label>
+            <input type="email" [(ngModel)]="patientForm.email" name="email" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all" placeholder="user@domain.com">
+          </div>
+          <div class="group">
+            <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">WhatsApp de Operación</label>
+            <input type="text" [(ngModel)]="patientForm.telefono" name="tel" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all" placeholder="+52 ...">
+          </div>
+        </div>
+
+        <div class="group">
+          <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Objetivo Estratégico Primario</label>
+          <select [(ngModel)]="patientForm.objetivo" name="obj" class="w-full h-11 bg-white/[0.02] border border-white/5 rounded-xl px-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all appearance-none cursor-pointer">
+            <option value="" disabled selected class="bg-gray-900 text-white">— SELECCIONAR META —</option>
+            <option value="Subir de peso" class="bg-gray-900 text-white">SUBIR DE PESO</option>
+            <option value="Bajar de peso" class="bg-gray-900 text-white">BAJAR DE PESO</option>
+            <option value="Salud" class="bg-gray-900 text-white">SALUD / MANTENIMIENTO</option>
+            <option value="Fuerza" class="bg-gray-900 text-white">FUERZA</option>
+            <option value="Entrenamiento hipertrofia" class="bg-gray-900 text-white">HIPERTROFIA</option>
+            <option value="Definición" class="bg-gray-900 text-white">DEFINICIÓN</option>
+          </select>
+        </div>
+
+        <!-- Clinical Area -->
+        <div class="pt-6 border-t border-white/5 space-y-6">
+          <div class="flex items-center gap-4">
+             <div class="w-2 h-2 rounded-full bg-red-600 shadow-[0_0_10px_rgba(220,38,38,0.5)]"></div>
+             <h3 class="text-h3 text-white/40">Protocolo Clínico y Restricciones</h3>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="group">
+               <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Padecimientos</label>
+               <textarea [(ngModel)]="patientForm.padecimientos" name="pad" class="w-full h-20 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all resize-none text-xs" placeholder="Enfermedades crónicas..."></textarea>
+            </div>
+            <div class="group">
+               <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors text-[#ef4444]">Alergias Críticas</label>
+               <textarea [(ngModel)]="patientForm.alergias" name="ale" class="w-full h-20 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all resize-none text-xs" placeholder="Alimentarias o químicas..."></textarea>
+            </div>
+            <div class="group">
+               <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors">Medicamentos</label>
+               <textarea [(ngModel)]="patientForm.medicamentos" name="med" class="w-full h-20 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all resize-none text-xs" placeholder="Dosis y frecuencia..."></textarea>
+            </div>
+          </div>
+
+          <div class="group">
+             <label class="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1.5 block group-focus-within:text-[#ef4444] transition-colors text-white/40">Bitácora de Seguimiento</label>
+             <label class="text-label text-white/20 mb-1.5 block group-focus-within:text-[#ef4444] transition-colors text-white/40">Bitácora de Seguimiento</label>
+             <textarea [(ngModel)]="patientForm.notas" name="not" class="w-full h-20 bg-white/[0.02] border border-white/5 rounded-xl p-4 text-white font-bold focus:border-[#ef4444]/50 outline-none transition-all resize-none text-xs" placeholder="Observaciones estratégicas..."></textarea>
+          </div>
+        </div>
+
+        <!-- Metric Area -->
+        <div class="pt-6 border-t border-white/5 space-y-6">
+            <div class="flex items-center gap-4">
+              <div class="w-2 h-2 rounded-full bg-white/10"></div>
+              <h3 class="text-h3 text-white/40">Biometría Inicial (Base)</h3>
+           </div>
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+             <div class="group bg-white/[0.01] border border-white/5 rounded-xl p-4">
+                <label class="text-label text-white/20 mb-1 block">Peso (kg)</label>
+                <input type="number" [(ngModel)]="measurementForm.peso_kg" name="pw" class="w-full bg-transparent text-xl font-black text-white italic outline-none leading-none" step="0.1">
+             </div>
+             <div class="group bg-white/[0.01] border border-white/5 rounded-xl p-4">
+                <label class="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 block">Grasa (%)</label>
+                <input type="number" [(ngModel)]="measurementForm.grasa_corporal" name="pg" class="w-full bg-transparent text-xl font-black text-white italic outline-none leading-none" step="0.1">
+             </div>
+             <div class="group bg-white/[0.01] border border-white/5 rounded-xl p-4">
+                <label class="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 block">Muscular (kg)</label>
+                <input type="number" [(ngModel)]="measurementForm.masa_muscular" name="pm" class="w-full bg-transparent text-xl font-black text-white italic outline-none leading-none" step="0.1">
+             </div>
+             <div class="group bg-white/[0.01] border border-white/5 rounded-xl p-4">
+                <label class="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1 block">Cintura (cm)</label>
+                <input type="number" [(ngModel)]="measurementForm.cintura" name="pc" class="w-full bg-transparent text-xl font-black text-white italic outline-none leading-none" step="0.1">
+             </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Footer -->
+    <div class="h-20 px-8 border-t border-white/5 flex items-center justify-between shrink-0 bg-[#0d0d0d]">
+      <p class="text-[8px] font-black text-white/10 uppercase tracking-[0.3em] italic">Protocolo de Operación Estratégica Activado</p>
+      <div class="flex items-center gap-4">
+        <button (click)="onClose()" class="h-11 px-6 rounded-xl text-[10px] font-black text-white/40 uppercase tracking-widest hover:text-white transition-all">CANCELAR</button>
+        <button (click)="onSave()" [disabled]="saving" class="h-11 px-10 rounded-xl bg-white text-black text-[10px] font-black uppercase tracking-widest hover:bg-[#ef4444] hover:text-white transition-all shadow-xl italic">
+          {{ saving ? 'GUARDANDO...' : 'RESERVAR EXPEDIENTE' }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

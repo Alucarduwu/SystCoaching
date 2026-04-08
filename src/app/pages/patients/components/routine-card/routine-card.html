@@ -1,0 +1,43 @@
+<article class="resource-card animate-fade-in bg-gradient-to-br from-[#111112] to-[#070708] border border-white/5 rounded-2xl p-5 flex flex-col gap-4 shadow-xl group hover:border-blue-600/30 transition-all duration-300 relative overflow-hidden">
+  
+  <!-- Glow Sutil -->
+  <div class="absolute -right-4 -top-4 w-16 h-16 bg-blue-600/5 rounded-full blur-2xl transition-all duration-700"></div>
+
+  <!-- Botones Acción Compactos -->
+  <div class="absolute top-4 right-4 flex items-center gap-1.5 opacity-0 group-hover:opacity-100 transition-all">
+    <button (click)="onEdit(); $event.stopPropagation()" class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/20 hover:bg-white hover:text-black transition-all">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+    </button>
+    <button (click)="onDelete(); $event.stopPropagation()" class="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-white/20 hover:bg-red-600 hover:text-white transition-all">
+      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1-1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+    </button>
+  </div>
+
+  <!-- Identificador -->
+  <div class="flex items-center gap-3">
+    <div class="w-1 h-3 bg-blue-600 rounded-full"></div>
+    <div class="flex flex-col">
+       <span class="text-[7px] font-black text-blue-600 uppercase tracking-widest italic leading-none mb-0.5">Entrenamiento Técnico</span>
+       <h5 class="text-xl font-black text-white tracking-tighter uppercase truncate italic">{{ routine?.nombre || 'Esquema de Entrenamiento' }}</h5>
+    </div>
+  </div>
+
+  <!-- Routine Status / Objective Mini Layout -->
+  <div class="bg-black/40 rounded-xl p-3 border border-white/5 flex items-center gap-3">
+    <div class="w-1.5 h-1.5 rounded-full bg-blue-600 animate-pulse"></div>
+    <span class="text-[8px] font-black text-white/40 uppercase tracking-widest italic truncate max-w-[200px]">
+       {{ routine?.notas || 'Protocolo personalizado' }}
+    </span>
+  </div>
+
+  <!-- Footer Info Lineal -->
+  <div class="flex items-center justify-between border-t border-white/5 pt-3 mt-1">
+    <div class="flex items-center gap-1.5 font-black uppercase text-white/20 tracking-widest italic text-[8px]">
+       <svg class="w-3 h-3 text-blue-600/40" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+       {{ routine?.created_at | date:'dd MMM, yyyy' }}
+    </div>
+    <button (click)="onView()" class="h-11 px-6 rounded-xl bg-blue-600 text-white text-[10px] font-black uppercase tracking-widest hover:bg-white hover:text-black transition-all italic">
+      Consultar Rutina
+    </button>
+  </div>
+</article>

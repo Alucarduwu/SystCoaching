@@ -1,0 +1,134 @@
+<section class="patient-measurements-section bg-transparent rounded-2xl p-2 mb-2">
+  <!-- Top Title Bar & Actions (Sticky) -->
+  <div *ngIf="!hideHeader" class="elite-sidebar-header">
+    <div class="elite-header-title-zone" style="gap: 10px;">
+      <div class="w-1 h-3 bg-emerald-600/50 rounded-full shadow-glow"></div>
+      <div class="flex flex-col gap-0">
+        <h3 class="text-[7.5px] font-black uppercase tracking-[0.2em] text-emerald-500/50 italic leading-none">REGISTROS</h3>
+        <h2 class="text-[11px] font-black uppercase italic text-white/90 leading-none">Biometría</h2>
+      </div>
+    </div>
+
+    <div class="elite-header-action-zone" style="gap: 10px;">
+      <div class="relative w-40 group">
+        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-2 h-2 text-white/10 group-focus-within:text-emerald-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+        <input
+          type="text"
+          class="w-full h-6 pl-8 pr-3 bg-white/[0.02] border border-white/5 rounded text-[8px] font-bold text-white placeholder:text-white/10 focus:outline-none focus:border-emerald-500/20 transition-all uppercase tracking-widest italic"
+          [ngModel]="search"
+          (ngModelChange)="searchChange.emit($event)"
+          placeholder="BUSCAR..."
+        />
+      </div>
+
+      <div class="flex items-center bg-white/5 p-0.5 rounded-lg border border-white/5">
+        <button 
+          (click)="setViewMode('cards')"
+          class="w-7 h-[20px] rounded-[6px] flex items-center justify-center transition-all"
+          [class.bg-emerald-600]="viewMode === 'cards'"
+          [class.text-white]="viewMode === 'cards'"
+          [class.text-white/20]="viewMode !== 'cards'"
+        >
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+        </button>
+        <button 
+          (click)="setViewMode('list')"
+          class="w-7 h-[20px] rounded-[6px] flex items-center justify-center transition-all"
+          [class.bg-emerald-600]="viewMode === 'list'"
+          [class.text-white]="viewMode === 'list'"
+          [class.text-white/20]="viewMode !== 'list'"
+        >
+          <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+        </button>
+      </div>
+
+      <button (click)="newMeasurement.emit()" class="h-6 px-3 rounded bg-emerald-600/80 text-white font-black text-[8px] uppercase tracking-wider hover:bg-white hover:text-black transition-all italic whitespace-nowrap flex-shrink-0">
+        + NUEVO
+      </button>
+    </div>
+  </div>
+
+    <div *ngIf="filteredMeasurements().length === 0; else measurementsList" class="flex flex-col items-center justify-center py-20 border border-dashed border-white/5 rounded-[2rem] bg-white/[0.02] mb-6">
+      <div class="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center text-white/20 mb-2">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+      </div>
+      <h4 class="text-[11px] font-black text-white uppercase tracking-widest mb-2">Sin Mediciones</h4>
+      <p class="text-[9px] text-white/30 font-bold uppercase tracking-widest">
+        Aún no hay registros biométricos.
+      </p>
+    </div>
+
+    <ng-template #measurementsList>
+  <!-- Selection Logic: Hybrid Render -->
+  <div class="px-1 space-y-4">
+    <!-- SELECTION HUD -->
+    <div class="flex items-center justify-between bg-white/[0.02] border border-white/5 p-3 rounded-xl mb-4" *ngIf="selectedMeasurements().length > 0">
+      <div class="flex flex-col">
+        <span class="label">Registros Seleccionados</span>
+        <span class="text-xs font-black text-white italic uppercase tracking-tighter">{{ selectedMeasurements().length }} DE {{ sortedMeasurements().length }}</span>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="text-[8px] font-black text-emerald-500 uppercase tracking-widest italic animate-pulse">MODO: SELECCIÓN ACTIVO</span>
+        <button (click)="clearSelection()" class="h-6 px-3 rounded bg-white/5 text-[8px] font-black text-white/30 uppercase tracking-widest hover:text-white transition-all italic">Limpiar</button>
+      </div>
+    </div>
+    <!-- CASE 1: EXACTLY 1 SELECTED (Detailed Dashboard) -->
+    <div *ngIf="selectedMeasurements().length === 1 && viewMode === 'cards'" class="animate-in fade-in zoom-in-95 duration-500">
+      <app-measurement-card
+        *ngFor="let measurement of selectedMeasurements()"
+        [measurement]="measurement"
+        [expanded]="true"
+        [isSelected]="true"
+        [formattedDate]="formatMeasurementDate(measurement.fecha || measurement.created_at)"
+        (toggleExpand)="toggleExpand.emit($event)"
+        (toggleSelect)="onToggleSelect($event)"
+      >
+      </app-measurement-card>
+    </div>
+
+    <!-- FULL LIST / CARDS VIEW (For picking) -->
+    <div class="mt-8 space-y-2">
+      <div class="flex items-center gap-2 mb-4">
+        <div class="w-1 h-3 bg-white/10"></div>
+        <h4 class="text-[9px] font-black uppercase text-white/40 italic">Repositorio de Registros</h4>
+      </div>
+
+      <ng-container *ngIf="viewMode === 'cards'">
+        <app-measurement-card
+          *ngFor="let measurement of sortedMeasurements()"
+          [measurement]="measurement"
+          [expanded]="false"
+          [isSelected]="isMeasurementSelected(measurement.id)"
+          [formattedDate]="formatMeasurementDate(measurement.fecha || measurement.created_at)"
+          (toggleExpand)="toggleExpand.emit($event)"
+          (toggleSelect)="onToggleSelect($event)"
+        >
+        </app-measurement-card>
+      </ng-container>
+
+      <div *ngIf="viewMode === 'list'" class="compact-measurements-list custom-scroll">
+        <div *ngFor="let m of sortedMeasurements()" 
+             class="compact-m-item" 
+             [class.selected]="isMeasurementSelected(m.id)">
+          <div class="m-check" (click)="onToggleSelect(m.id)">
+            <svg *ngIf="isMeasurementSelected(m.id)" class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"/></svg>
+          </div>
+          <div class="m-info">
+            <span class="m-date">{{ formatMeasurementDate(m.fecha || m.created_at) }}</span>
+            <span class="m-weight">{{ m.peso_kg || '—' }} KG // {{ m.grasa_corporal || '—' }}% BF</span>
+          </div>
+          <div class="ml-auto flex items-center gap-3">
+             <button (click)="$event.stopPropagation(); onEditMeasurement(m)" class="text-white/10 hover:text-emerald-500 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+             </button>
+             <button (click)="$event.stopPropagation(); onDeleteMeasurement(m.id)" class="text-white/10 hover:text-red-500 transition-colors">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+             </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+    </ng-template>
+
+</section>

@@ -1,0 +1,72 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.elite-patient-header {
+  --elite-card-radius: 2.5rem;
+  
+  .elite-card {
+    background-color: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: var(--elite-card-radius);
+    transition: all var(--duration-base) var(--ease-standard);
+    
+    &:hover {
+      background-color: var(--surface-soft);
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+    }
+  }
+
+  .group\/kpi {
+    cursor: default;
+    
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+
+  /* Responsive Adjustments */
+  @media (max-width: 1280px) {
+    .elite-card {
+      border-radius: 2rem;
+      padding: 2rem !important;
+    }
+  }
+}
+
+.animate-fade-in {
+  animation: eliteFadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes eliteFadeIn {
+  from { 
+    opacity: 0; 
+    transform: translateY(20px); 
+    filter: blur(10px);
+  }
+  to { 
+    opacity: 1; 
+    transform: translateY(0); 
+    filter: blur(0);
+  }
+}
+
+/* Custom Scrollbar for mobile/horizontal areas */
+.custom-scroll {
+  &::-webkit-scrollbar {
+    height: 4px;
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.02);
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--text-faint);
+  }
+}

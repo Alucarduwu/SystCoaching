@@ -1,0 +1,521 @@
+<div *ngIf="open" class="modal-overlay" (click)="onClose()">
+  <div class="modal-container dark-frost" (click)="$event.stopPropagation()">
+    <!-- HEADER -->
+    <div class="modal-header">
+      <div class="header-main">
+        <div class="status-badge" [class.generating]="isGenerating()">
+          <span class="pulse-dot"></span>
+          {{ isGenerating() ? 'DCP_GENERATOR_ACTIVE' : 'DCP_SYSTEM_IDLE' }}
+        </div>
+        <h2 class="title">Mega Dossier Profesional <span class="version">v3.0</span></h2>
+      </div>
+      <button class="close-btn" (click)="onClose()" [disabled]="isGenerating()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+
+    <!-- MAIN GRID -->
+    <div class="modal-content">
+      <div class="mega-grid">
+        <!-- LEFT: CONFIGURATION -->
+        <div class="config-panel">
+          <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-layer-group"></i> Configuración del Reporte</h3>
+            
+            <div class="control-group">
+              <label>Planes Nutricionales</label>
+              <div class="measurements-selector custom-scroll">
+                <div *ngIf="availableDiets().length === 0" class="no-data-msg">
+                   <i class="fas fa-exclamation-triangle"></i> SIN PLANES DISPONIBLES
+                </div>
+                <div *ngFor="let d of availableDiets()" 
+                     class="m-item" 
+                     [class.selected]="isDietSelected(d.id)"
+                     (click)="toggleDietSelection(d.id)">
+                  <div class="m-check"><i class="fas fa-check"></i></div>
+                  <div class="m-info">
+                    <span class="m-date">{{ d.nombre }}</span>
+                    <span class="m-weight">{{ formatDate(d.created_at) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <label>Protocolos de Entrenamiento</label>
+              <div class="measurements-selector custom-scroll">
+                <div *ngIf="availableRoutines().length === 0" class="no-data-msg">
+                   <i class="fas fa-exclamation-triangle"></i> SIN RUTINAS DISPONIBLES
+                </div>
+                <div *ngFor="let r of availableRoutines()" 
+                     class="m-item" 
+                     [class.selected]="isRoutineSelected(r.id)"
+                     (click)="toggleRoutineSelection(r.id)">
+                  <div class="m-check"><i class="fas fa-check"></i></div>
+                  <div class="m-info">
+                    <span class="m-date">{{ r.nombre }}</span>
+                    <span class="m-weight">{{ formatDate(r.created_at) }}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="control-group">
+              <div class="label-with-action">
+                <label>Métricas de Seguimiento</label>
+                <button class="mini-btn" (click)="manualReload()" [disabled]="isGenerating()">
+                   RECARGAR <i class="fas fa-sync-alt"></i>
+                </button>
+              </div>
+              <div class="measurements-selector custom-scroll">
+                <div *ngIf="availableMeasurements().length === 0" class="no-data-msg">
+                   <i class="fas fa-exclamation-triangle"></i> NO SE DETECTARON REGISTROS
+                </div>
+                <div *ngFor="let m of availableMeasurements()" 
+                     class="m-item" 
+                     [class.selected]="isMeasurementSelected(m.id)"
+                     (click)="toggleMeasurementSelection(m.id)">
+                  <div class="m-check"><i class="fas fa-check"></i></div>
+                  <div class="m-info">
+                    <span class="m-date">{{ formatDate(m.fecha) }}</span>
+                    <span class="m-weight">{{ m.peso_kg }} kg // {{ m.grasa_corporal }}%</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="panel-section">
+            <h3 class="section-title"><i class="fas fa-tasks"></i> Secciones Incluidas</h3>
+            <div class="switches-grid">
+              <label class="switch-item">
+                <input type="checkbox" [ngModel]="sections.diet" (change)="toggleSection('diet')">
+                <span class="label">Nutrición</span>
+              </label>
+              <label class="switch-item">
+                <input type="checkbox" [ngModel]="sections.training" (change)="toggleSection('training')">
+                <span class="label">Entrenamiento</span>
+              </label>
+              <label class="switch-item">
+                <input type="checkbox" [ngModel]="sections.measurements" (change)="toggleSection('measurements')">
+                <span class="label">Mediciones</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: PREVIEW -->
+        <div class="preview-panel">
+          <div class="preview-header">
+            <span>ORDEN DE PÁGINAS</span>
+            <span class="page-count text-red">{{ pages().length }} HOJAS</span>
+          </div>
+          
+          <div class="pages-list custom-scroll" cdkDropList (cdkDropListDropped)="$any(pages())">
+            <div *ngFor="let page of pages(); let i = index" class="page-item" cdkDrag>
+              <div class="page-idx">0{{ i + 1 }}</div>
+              <div class="page-name">{{ (page.name || page.id) | uppercase }}</div>
+              <div class="page-drag"><i class="fas fa-grip-vertical"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER / PROGRESS -->
+    <div class="modal-footer">
+      <div class="status-area" *ngIf="isGenerating()">
+        <div class="progress-container">
+          <div class="progress-bar" [style.width.%]="exportProgress()"></div>
+        </div>
+        <span class="status-text">{{ status() }}</span>
+      </div>
+
+      <div class="actions" *ngIf="!isGenerating()">
+        <button class="btn btn-outline" (click)="onClose()">CANCELAR</button>
+        <button class="btn btn-outline" (click)="generateMegaPdf()">
+          <i class="fas fa-archive"></i> GUARDAR EN BÓVEDA
+        </button>
+        <button class="btn btn-primary" (click)="downloadToPc()">
+          <i class="fas fa-download"></i> EXPORTAR A PC
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- HIDDEN PDF RENDERING ENGINE (THE PHANTOM) -->
+  <div class="pdf-phantom-container">
+    <div id="pdf-render-root">
+      <div id="mega-cover"><ng-container [ngTemplateOutlet]="coverTpl"></ng-container></div>
+      <div id="mega-profile-page"><ng-container [ngTemplateOutlet]="profileTpl"></ng-container></div>
+      
+      <!-- LOOP DIETS -->
+      <ng-container *ngFor="let dItem of syncDiets(); let di = index">
+        <div [id]="'pdf-nutrition-plan-' + di"><ng-container [ngTemplateOutlet]="nutritionTpl" [ngTemplateOutletContext]="{ data: dItem }"></ng-container></div>
+        <div [id]="'pdf-nutrition-guidelines-' + di"><ng-container [ngTemplateOutlet]="nutritionGuidelinesTpl"></ng-container></div>
+        <div [id]="'pdf-nutrition-guide-' + di"><ng-container [ngTemplateOutlet]="nutritionGuideTpl"></ng-container></div>
+      </ng-container>
+
+      <!-- LOOP ROUTINES -->
+      <ng-container *ngFor="let rItem of syncRoutines(); let ri = index">
+        <div [id]="'pdf-training-plan-master-' + ri">
+          <ng-container [ngTemplateOutlet]="trainingTpl" [ngTemplateOutletContext]="{ mode: 'master', data: rItem }"></ng-container>
+        </div>
+        <div [id]="'pdf-training-plan-matrix-' + ri">
+           <div *ngFor="let week of rItem.hierarchy; let wi = index" [id]="'pdf-mega-week-block-' + ri + '-' + wi">
+              <ng-container [ngTemplateOutlet]="trainingTpl" [ngTemplateOutletContext]="{ mode: 'matrix', week: week, index: wi, data: rItem }"></ng-container>
+           </div>
+        </div>
+      </ng-container>
+
+      <div id="mega-measurements-report" *ngIf="measurementData().length > 0"><ng-container [ngTemplateOutlet]="measurementsTpl"></ng-container></div>
+    </div>
+  </div>
+
+  <style>
+    /* GLOBAL PDF TOKENS */
+    #pdf-render-root {
+      --pdf-bg: #020617;
+      --pdf-card: #0f172a;
+      --pdf-accent: #ef4444;
+      --pdf-text: #ffffff;
+      --pdf-subtext: #94a3b8;
+      --pdf-border: rgba(255, 255, 255, 0.1);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .pdf-page {
+      width: 210mm;
+      min-height: 297mm;
+      background: var(--pdf-bg);
+      color: var(--pdf-text);
+      padding: 15mm;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .pdf-header {
+      border-bottom: 2px solid var(--pdf-accent);
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+    }
+
+    .pdf-header .title {
+      font-size: 20px;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-style: italic;
+      letter-spacing: -0.04em;
+    }
+
+    .pdf-header .meta {
+      font-size: 8px;
+      font-weight: 900;
+      color: var(--pdf-accent);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .pdf-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+      margin-bottom: 20px;
+    }
+
+    .pdf-table th {
+      background: rgba(255, 255, 255, 0.05);
+      padding: 8px;
+      text-align: left;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      border-bottom: 1px solid var(--pdf-border);
+      color: var(--pdf-subtext);
+    }
+
+    .pdf-table td {
+      padding: 8px;
+      border-bottom: 1px solid var(--pdf-border);
+    }
+  </style>
+
+  <ng-template #coverTpl>
+    <div class="pdf-page" style="justify-content: center; align-items: center; text-align: center;">
+      <div style="position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; background: rgba(239, 68, 68, 0.05); border-radius: 50%; filter: blur(100px);"></div>
+      <div style="border-left: 4px solid var(--pdf-accent); padding-left: 40px; text-align: left;">
+        <span style="font-size: 10px; font-weight: 900; letter-spacing: 0.5em; color: var(--pdf-accent);">REPORTE OPERATIVO</span>
+        <h1 style="font-size: 64px; font-weight: 950; line-height: 0.9; margin: 10px 0; font-style: italic; text-transform: uppercase;">DOSSIER<br>BIOLÓGICO</h1>
+        <div style="width: 60px; height: 4px; background: white; margin: 30px 0;"></div>
+        <p style="font-size: 24px; font-weight: 950; text-transform: uppercase; font-style: italic;">{{ patientData()?.nombres || 'ATLETA' }} {{ patientData()?.apellido_paterno || 'S/N' }}</p>
+        <span style="font-size: 10px; color: var(--pdf-subtext); letter-spacing: 0.2em;">FECHA: {{ currentTimestamp | date:'dd/MM/yyyy' | uppercase }} // DCC_SYSTEM_V4</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #profileTpl>
+    <div class="pdf-page">
+      <div class="pdf-header">
+        <div>
+          <span class="meta">P.01 // DIAGNÓSTICO</span>
+          <h2 class="title">Perfil de Rendimiento</h2>
+        </div>
+        <div style="text-align: right;">
+          <span class="meta">STATUS: ACTIVO</span>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <div style="padding: 20px; border: 1px solid var(--pdf-border); border-radius: 8px;">
+          <h3 style="font-size: 10px; font-weight: 900; color: var(--pdf-accent); border-bottom: 1px solid var(--pdf-border); padding-bottom: 8px; margin-bottom: 12px;">FILIACIÓN Y BIOMETRÍA</h3>
+          <table class="pdf-table" style="margin-bottom: 0;">
+            <tr><td style="color: var(--pdf-subtext); border: none;">EDAD</td><td style="text-align: right; font-weight: 900; border: none;">{{ patientAge() }} AÑOS</td></tr>
+            <tr><td style="color: var(--pdf-subtext); border: none;">ESTATURA</td><td style="text-align: right; font-weight: 900; border: none;">{{ patientData()?.estatura_cm || 'N/A' }} CM</td></tr>
+            <tr><td style="color: var(--pdf-subtext); border: none;">GÉNERO</td><td style="text-align: right; font-weight: 900; border: none;">{{ patientData()?.sexo || 'N/A' }}</td></tr>
+            <tr><td style="color: var(--pdf-subtext); border: none;">EMAIL</td><td style="text-align: right; font-weight: 900; border: none;">{{ patientData()?.email || 'N/A' }}</td></tr>
+          </table>
+        </div>
+        <div style="padding: 20px; border: 1px solid var(--pdf-border); border-radius: 8px;">
+          <h3 style="font-size: 10px; font-weight: 900; color: var(--pdf-accent); border-bottom: 1px solid var(--pdf-border); padding-bottom: 8px; margin-bottom: 12px;">OBJETIVO BASE</h3>
+          <p style="font-size: 18px; font-weight: 900; font-style: italic; line-height: 1.2;">{{ patientData()?.objetivo || 'N/A' }}</p>
+          <div style="margin-top: 15px; font-size: 8px; color: var(--pdf-subtext); border-top: 1px dashed var(--pdf-border); padding-top: 10px;">
+            SISTEMA_DCC: DETERMINACIÓN DE PRIORIDAD OPERATIVA
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; padding: 20px; border: 1px solid var(--pdf-border); border-radius: 8px;">
+        <h3 style="font-size: 10px; font-weight: 900; color: var(--pdf-accent); border-bottom: 1px solid var(--pdf-border); padding-bottom: 8px; margin-bottom: 12px;">ANTECEDENTES CLÍNICOS</h3>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;">
+          <div><span style="font-size: 8px; color: var(--pdf-subtext); display: block;">PADECIMIENTOS</span><span style="font-size: 10px; font-weight: 700;">{{ patientData()?.padecimientos || 'N/A' }}</span></div>
+          <div><span style="font-size: 8px; color: var(--pdf-accent); display: block;">ALERGIAS</span><span style="font-size: 10px; font-weight: 700;">{{ patientData()?.alergias || 'N/A' }}</span></div>
+          <div><span style="font-size: 8px; color: var(--pdf-subtext); display: block;">MEDICAMENTOS</span><span style="font-size: 10px; font-weight: 700;">{{ patientData()?.medicamentos || 'N/A' }}</span></div>
+        </div>
+      </div>
+      
+      <div style="margin-top: 20px; flex: 1;">
+         <h3 style="font-size: 10px; font-weight: 900; color: var(--pdf-accent); border-bottom: 1px solid var(--pdf-border); padding-bottom: 8px; margin-bottom: 12px;">BITÁCORA DE SEGUIMIENTO</h3>
+         <p style="font-size: 10px; line-height: 1.6; color: var(--pdf-subtext); font-style: italic;">{{ patientData()?.notas || 'Sin registros adicionales registrados.' }}</p>
+      </div>
+
+      <div style="border-top: 1px solid var(--pdf-border); padding-top: 10px; font-size: 8px; color: var(--pdf-subtext); display: flex; justify-content: space-between;">
+        <span>SYSTCOACH DCC // CLINICAL DIVISION</span>
+        <span>ID: {{ patientData()?.id }}</span>
+      </div>
+    </div>
+  </ng-template>
+
+  <ng-template #nutritionTpl let-data="data">
+    <div class="pdf-page">
+      <div class="pdf-header">
+        <div>
+          <span class="meta">P.02 // ESTRATEGIA NUTRICIONAL</span>
+          <h2 class="title italic">{{ data.nombre | uppercase }}</h2>
+        </div>
+      </div>
+
+      <!-- GOALS SUMMARY HUD -->
+      <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px;">
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--pdf-border); border-radius: 8px; padding: 12px; text-align: center;">
+          <span style="font-size: 7px; color: var(--pdf-subtext); font-weight: 900;">KCAL OBJETIVO</span>
+          <div style="font-size: 18px; font-weight: 900; color: #fff;">{{ data.goals.kcal || 'N/A' }}</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--pdf-border); border-radius: 8px; padding: 12px; text-align: center;">
+          <span style="font-size: 7px; color: #ef4444; font-weight: 900;">PROTEÍNA</span>
+          <div style="font-size: 18px; font-weight: 900; color: #fff;">{{ data.goals.p || 'N/A' }}G</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--pdf-border); border-radius: 8px; padding: 12px; text-align: center;">
+          <span style="font-size: 7px; color: #3b82f6; font-weight: 900;">CARBOHIDRATOS</span>
+          <div style="font-size: 18px; font-weight: 900; color: #fff;">{{ data.goals.c || 'N/A' }}G</div>
+        </div>
+        <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--pdf-border); border-radius: 8px; padding: 12px; text-align: center;">
+          <span style="font-size: 7px; color: #eab308; font-weight: 900;">GRASAS TOTALES</span>
+          <div style="font-size: 18px; font-weight: 900; color: #fff;">{{ data.goals.g || 'N/A' }}G</div>
+        </div>
+      </div>
+
+      <!-- MEALS CLINICAL TABLE -->
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">INGESTA / TIEMPO</th>
+            <th style="width: 55%;">ALIMENTOS Y PORCIONES</th>
+            <th style="width: 20%; text-align: right;">VALORES ESTIMADOS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let meal of data.meals">
+            <td style="vertical-align: top;">
+              <span style="font-weight: 900; color: var(--pdf-accent); font-style: italic;">{{ meal.nombre | uppercase }}</span>
+              <p style="font-size: 7px; color: var(--pdf-subtext); margin-top: 4px; font-style: italic;" *ngIf="meal.notas">{{ meal.notas }}</p>
+            </td>
+            <td style="padding: 0;">
+              <div *ngFor="let opt of meal.options" style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.02);">
+                <div style="font-weight: 800; font-size: 8px; color: var(--pdf-subtext); margin-bottom: 4px;">OPCIÓN: {{ opt.nombre | uppercase }}</div>
+                <div *ngFor="let it of opt.items" style="font-size: 8px; margin-bottom: 2px; display: flex; justify-content: space-between;">
+                  <span>• {{ it.alimento }}</span>
+                  <span style="font-weight: 900;">{{ it.cantidad }} {{ it.unidad }}</span>
+                </div>
+              </div>
+            </td>
+            <td style="vertical-align: top; text-align: right; font-size: 8px; font-weight: 900;">
+              <div *ngFor="let opt of meal.options" style="padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.02); height: auto;">
+                 <span style="color: #fff;">{{ opt.macros.kcal }} KCAL</span>
+                 <div style="font-size: 7px; color: var(--pdf-subtext); margin-top: 2px;">
+                   P:{{ opt.macros.p }} C:{{ opt.macros.c }} G:{{ opt.macros.g }}
+                 </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-template>
+
+  <ng-template #trainingTpl let-mode="mode" let-week="week" let-wi="index" let-data="data">
+    <div class="pdf-page">
+      <div class="pdf-header">
+        <div>
+          <span class="meta">P.03-{{ (wi + 1) || 'M' }} // ENTRENAMIENTO</span>
+          <h2 class="title italic">{{ mode === 'master' ? data.nombre : (week.nombre | uppercase) }}</h2>
+        </div>
+      </div>
+
+      <ng-container *ngIf="mode === 'master'">
+         <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+           <div style="background: rgba(255,255,255,0.03); border-left: 4px solid var(--pdf-accent); padding: 20px; border-radius: 8px;">
+              <span style="font-size: 7px; font-weight: 900; color: var(--pdf-accent);">PROTOCOLO MAESTRO</span>
+              <h3 style="font-size: 24px; font-weight: 900; font-style: italic; margin-top: 5px;">{{ data.nombre || 'SIN PROTOCOLO' }}</h3>
+              <p style="font-size: 10px; color: var(--pdf-subtext); margin-top: 10px; line-height: 1.6;">{{ data.original?.notas || 'N/A' }}</p>
+           </div>
+           
+           <table class="pdf-table">
+             <tr><th>FRECUENCIA SEMANAL</th><td>{{ data.original?.frecuencia || 'N/A' }} DÍAS</td></tr>
+             <tr><th>DURACIÓN TOTAL</th><td>{{ data.original?.semanas || 'N/A' }} SEMANAS</td></tr>
+             <tr><th>ENFOQUE TÉCNICO</th><td>HIPERTROFIA MIOFIBRILAR / SOBRECARGA PROGRESIVA</td></tr>
+           </table>
+         </div>
+      </ng-container>
+
+      <ng-container *ngIf="mode === 'matrix' && week">
+         <div *ngFor="let day of week.days" style="margin-bottom: 25px;">
+            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--pdf-accent); padding-bottom: 5px; margin-bottom: 10px;">
+               <span style="font-weight: 900; font-style: italic; font-size: 14px;">{{ day.nombre | uppercase }}</span>
+               <span style="font-size: 8px; font-weight: 900; color: var(--pdf-accent);">WORKOUT_SESSION_ALPHA</span>
+            </div>
+            
+            <table class="pdf-table">
+               <thead>
+                 <tr>
+                    <th style="width: 40%;">EJERCICIO / TÉCNICA</th>
+                    <th style="text-align: center;">SETS</th>
+                    <th style="text-align: center;">REPS</th>
+                    <th style="text-align: center;">TEMPO</th>
+                    <th style="text-align: right;">DESCANSO</th>
+                 </tr>
+               </thead>
+               <tbody>
+                  <tr *ngFor="let mg of day.muscleGroups">
+                     <td colspan="5" style="background: rgba(255,255,255,0.02); font-weight: 900; font-size: 8px; color: var(--pdf-accent);">
+                        BLOQUE: {{ mg.nombre | uppercase }}
+                     </td>
+                  </tr>
+                  <ng-container *ngFor="let mg of day.muscleGroups">
+                    <tr *ngFor="let ex of mg.exercises">
+                       <td>
+                          <div style="font-weight: 900; font-size: 11px;">{{ ex.nombre || 'N/A' }}</div>
+                          <div style="font-size: 7px; color: var(--pdf-subtext); margin-top: 2px;">{{ ex.region || 'N/A' }} // {{ ex.tipo_agarre || 'N/A' }}</div>
+                       </td>
+                       <td style="text-align: center; font-weight: 900; font-size: 14px; color: var(--pdf-accent);">{{ ex.series || '0' }}</td>
+                       <td style="text-align: center; font-weight: 900;">{{ ex.repeticiones || 'N/A' }}</td>
+                       <td style="text-align: center; font-weight: 900; font-size: 8px;">{{ ex.tempo || '3-0-1-0' }}</td>
+                       <td style="text-align: right; font-weight: 900; font-size: 8px;">{{ ex.descanso || '90s' }}</td>
+                    </tr>
+                  </ng-container>
+               </tbody>
+            </table>
+         </div>
+      </ng-container>
+    </div>
+  </ng-template>
+
+  <ng-template #measurementsTpl>
+    <div class="pdf-page">
+      <div class="pdf-header">
+        <div>
+          <span class="meta">P.04 // EVOLUCIÓN CRÍTICA</span>
+          <h2 class="title italic">REPORTE ANTROPOMÉTRICO</h2>
+        </div>
+      </div>
+
+      <p style="font-size: 8px; color: var(--pdf-subtext); margin-bottom: 20px; font-style: italic;">
+        SISTEMA_DCC: ANÁLISIS DE TENDENCIAS BIOLÓGICAS BASADO EN {{ measurementData().length }} REGISTROS SELECCIONADOS.
+      </p>
+
+      <table class="pdf-table">
+        <thead>
+          <tr>
+            <th style="width: 25%;">FECHA / MÉTRICA</th>
+            <th *ngFor="let m of measurementData()" style="text-align: center;">{{ formatMeasurementDate(m.fecha) | uppercase }}</th>
+            <th *ngIf="measurementData().length === 0" style="text-align: center;">N/A</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td style="font-weight: 900;">PESO CORPORAL (KG)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 950;">{{ m.peso_kg || 'N/A' }}</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+          <tr><td style="font-weight: 900;">% GRASA (BF)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 950; color: var(--pdf-accent);">{{ m.grasa_corporal || 'N/A' }}%</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+          <tr><td style="font-weight: 900;">M. MAGRA (KG)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 950; color: #3b82f6;">{{ m.masa_magra_kg || 'N/A' }}</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+          <tr><td style="font-weight: 900;">CINTURA (CM)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 900;">{{ m.cintura || 'N/A' }}</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+          <tr style="background: rgba(255,255,255,0.015);"><td style="font-weight: 900;">P. ABDOMINAL (CM)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 900;">{{ m.perimetro_abdominal || 'N/A' }}</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+          <tr><td style="font-weight: 900;">CADERA (CM)</td><td *ngFor="let m of measurementData()" style="text-align: center; font-weight: 900;">{{ m.perimetro_cadera || 'N/A' }}</td><td *ngIf="measurementData().length === 0" style="text-align: center;">N/A</td></tr>
+        </tbody>
+      </table>
+
+      <!-- CLINICAL OBSERVATIONS -->
+      <div style="flex: 1; margin-top: 20px;">
+        <h3 style="font-size: 10px; font-weight: 900; color: var(--pdf-accent); border-bottom: 1px solid var(--pdf-border); padding-bottom: 8px; margin-bottom: 12px;">NOTAS DE CAMPO</h3>
+        <div *ngFor="let m of measurementData()" style="margin-bottom: 15px; border-left: 2px solid rgba(255,255,255,0.05); padding-left: 15px;">
+           <span style="font-size: 7px; color: var(--pdf-subtext); font-weight: 900; display: block;">{{ formatMeasurementDate(m.fecha) | uppercase }}</span>
+           <p style="font-size: 9px; line-height: 1.4; color: var(--pdf-subtext); font-style: italic;">{{ m.notas || 'Sin observaciones registradas.' }}</p>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #nutritionGuidelinesTpl>
+      <div class="pdf-master-page">
+          <div class="auth-bar"><div><span class="chip" style="color: #ef4444;">SISTEMA_DCC // 02B</span><h1 style="color: #000;">Directrices & Recomendaciones</h1></div></div>
+          <div class="v-card" style="margin-top: 20px;">
+              <span class="chip" style="background:#ef4444; color:#fff;">NORMAS DE ORO</span>
+              <ul style="margin-top: 15px; font-size: 13px; line-height: 1.8; color: #444;">
+                  <li>💧 <b>HIDRATACIÓN:</b> Mínimo 3-4 litros de agua diarios, distribuidos equitativamente.</li>
+                  <li>🧂 <b>SODIO:</b> No eliminar la sal; usar sal marina o del Himalaya con moderación.</li>
+                  <li>☕ <b>ESTIMULANTES:</b> Limitar cafeína después de las 16:00 para optimizar el descanso.</li>
+                  <li>🥦 <b>VEGETALES:</b> Consumo libre en comidas principales para asegurar micronutrientes y fibra.</li>
+              </ul>
+          </div>
+          <div class="footer-nav"><span>SYSTCOACH DCC</span><span>P.03_NUTRITION_GUIDELINES</span></div>
+      </div>
+  </ng-template>
+
+  <ng-template #nutritionGuideTpl>
+      <div class="pdf-master-page">
+          <div class="auth-bar"><div><span class="chip" style="color: #ef4444;">SISTEMA_DCC // 02C</span><h1 style="color: #000;">Guía de Intercambios & Equivalencias</h1></div></div>
+          <div style="flex: 1; border: 1px solid #eee; border-radius: 12px; overflow: hidden; background: #fff; margin-top:20px;">
+              <table style="width: 100%; border-collapse: collapse; font-size: 11px;">
+                  <thead style="background: #ef4444; color: #fff;">
+                      <tr><th style="padding: 12px; text-align: left;">GRUPO</th><th style="padding: 12px; text-align: left;">CANTIDAD (100g)</th><th style="padding: 12px; text-align: right;">NOTAS</th></tr>
+                  </thead>
+                  <tbody>
+                      <tr style="border-bottom: 1px solid #f1f5f9;"><td>PROTEÍNA MAGRA</td><td>Pollo, Pavo, Claras de huevo</td><td style="text-align: right;">Peso en crudo</td></tr>
+                      <tr style="border-bottom: 1px solid #f1f5f9;"><td>CARB. COMPLEJO</td><td>Arroz, Papa, Camote, Avena</td><td style="text-align: right;">Aporte energético</td></tr>
+                      <tr style="border-bottom: 1px solid #f1f5f9;"><td>GRASAS SALUDABLES</td><td>Aguacate, Olivo, Nueces</td><td style="text-align: right;">Equilibrio hormonal</td></tr>
+                  </tbody>
+              </table>
+          </div>
+          <div class="footer-nav"><span>SYSTCOACH DCC</span><span>P.04_NUTRITION_EXCHANGES</span></div>
+      </div>
+  </ng-template>
+</div>

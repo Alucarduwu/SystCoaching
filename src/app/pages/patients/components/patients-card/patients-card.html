@@ -1,0 +1,98 @@
+<article 
+  class="group relative bg-[#0a0a0a] border border-white/5 rounded-2xl p-5 hover:bg-[#111111] transition-all duration-300 cursor-pointer flex flex-col min-h-[160px] shadow-2xl active:scale-[0.98] animate-in fade-in slide-in-from-bottom-2 duration-500 overflow-hidden" 
+  (click)="view.emit(patient.id)"
+>
+  <!-- Decorative Background Glow (Hover) -->
+  <div class="absolute -top-20 -right-20 w-40 h-40 bg-[#ef4444]/5 blur-[80px] group-hover:bg-[#ef4444]/10 transition-all duration-500 opacity-60"></div>
+
+  <!-- Card Header -->
+  <div class="flex items-center justify-between mb-6 relative z-10">
+    <!-- Compact Avatar Box -->
+    <div 
+      class="w-12 h-12 flex items-center justify-center text-[14px] font-black text-white rounded-xl uppercase tracking-tighter border border-white/5 shadow-[0_5px_20px_rgba(0,0,0,0.5)] transition-all duration-500 group-hover:scale-105"
+      [style.background]="'linear-gradient(135deg, ' + getBrandColor() + ' 0%, #000 150%)'"
+    >
+      {{ getInitials(patient) }}
+    </div>
+
+    <!-- Glowing Status Indicators -->
+    <div class="flex items-center gap-2">
+       <div 
+         *ngIf="patient.has_diet"
+         title="Dieta Activa"
+         class="w-8 h-8 rounded-full flex items-center justify-center border border-[#ef4444]/20 bg-[#ef4444]/5 text-[#ef4444] text-[9px] font-black shadow-[0_0_10px_rgba(239,68,68,0.05)] group-hover:shadow-[0_0_15px_rgba(239,68,68,0.2)] group-hover:bg-[#ef4444] group-hover:text-white transition-all duration-300"
+       >D</div>
+       <div 
+         *ngIf="patient.has_routine"
+         title="Entrenamiento Activo"
+         class="w-8 h-8 rounded-full flex items-center justify-center border border-[#00e5ff]/20 bg-[#00e5ff]/5 text-[#00e5ff] text-[9px] font-black shadow-[0_0_10px_rgba(0,229,255,0.05)] group-hover:shadow-[0_0_15px_rgba(0,229,255,0.2)] group-hover:bg-[#00e5ff] group-hover:text-white transition-all duration-300"
+       >E</div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="flex flex-col gap-2 mb-6 relative z-10">
+    <h4 class="text-h3 text-white group-hover:text-[#ef4444] transition-colors capitalize">
+      {{ patient.nombres }} {{ patient.apellido_paterno }}
+    </h4>
+    <div class="flex items-center justify-between w-full pr-1">
+      <span class="text-label text-slate-600">#ID-{{ 1000 + patient.id }}</span>
+      <div class="px-2 py-1 rounded bg-white/[0.03] border border-white/5">
+         <span class="text-label text-slate-400">
+           {{ (patient.sexo?.startsWith('F') || patient.sexo?.startsWith('f')) ? 'FEM' : 'MASC' }}
+         </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Technical Stats Grid (Perfectly Aligned) -->
+  <div class="grid grid-cols-3 items-center relative z-10 p-4 bg-white/[0.02] border border-white/5 rounded-xl group-hover:bg-white/[0.04] transition-all duration-300 mb-6">
+    <!-- Edad -->
+    <div class="flex flex-col items-center">
+      <span class="text-label text-slate-600 mb-1.5">Edad</span>
+      <span class="text-[12px] font-black text-white tracking-tight leading-none uppercase">
+        {{ patient.edad || '?' }}<span class="text-[8px] ml-0.5 opacity-30">A</span>
+      </span>
+    </div>
+
+    <!-- Divider -->
+    <div class="absolute left-1/3 top-1/2 -translate-y-1/2 w-px h-6 bg-white/5"></div>
+
+    <!-- Peso -->
+    <div class="flex flex-col items-center">
+      <span class="text-label text-slate-600 mb-1.5">Peso</span>
+      <span class="text-[12px] font-black text-white tracking-tight leading-none uppercase">
+        {{ patient.peso_actual || '?' }}<span class="text-[8px] ml-0.5 opacity-30">KG</span>
+      </span>
+    </div>
+
+    <!-- Divider -->
+    <div class="absolute left-2/3 top-1/2 -translate-y-1/2 w-px h-6 bg-white/5"></div>
+
+    <!-- Estatura -->
+    <div class="flex flex-col items-center">
+      <span class="text-label text-slate-600 mb-1.5">Est.</span>
+      <span class="text-[12px] font-black text-white tracking-tight leading-none uppercase">
+        {{ patient.estatura_cm || patient.estatura || '?' }}<span class="text-[8px] ml-0.5 opacity-30">CM</span>
+      </span>
+    </div>
+  </div>
+
+  <!-- Footer Actions -->
+  <div class="mt-auto pt-4 border-t border-white/5 flex items-center justify-between relative z-10">
+    <span class="text-kicker group-hover:text-white/40 transition-all">PROTOCOLO ACTIVO</span>
+    
+    <div class="flex items-center gap-3">
+       <button 
+         type="button" 
+         class="opacity-0 group-hover:opacity-40 hover:!opacity-100 hover:text-red-500 transition-all p-2 bg-white/5 rounded-lg border border-white/5"
+         (click)="onDelete($event)"
+       >
+         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+       </button>
+       <div class="w-9 h-9 rounded-lg bg-[#ef4444]/5 border border-[#ef4444]/10 flex items-center justify-center text-[#ef4444] group-hover:bg-[#ef4444] group-hover:text-white group-hover:shadow-[0_0_15px_rgba(239,68,68,0.3)] transition-all duration-500">
+         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5"/></svg>
+       </div>
+    </div>
+  </div>
+</article>

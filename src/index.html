@@ -8,6 +8,18 @@
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 </head>
 <body>
-  <app-root></app-root>
+  <app-root>
+    <style>
+      body { background: #000; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+      .loading-shell { text-align: center; font-family: 'Inter', sans-serif; }
+      .pulse-core { width: 3px; height: 40px; background: #FF3131; margin: 0 auto 20px; border-radius: 99px; animation: tactical-pulse 1.5s infinite ease-in-out; box-shadow: 0 0 20px rgba(255, 49, 49, 0.4); }
+      .loading-label { font-size: 10px; font-weight: 900; color: #fff; text-transform: uppercase; letter-spacing: 0.5em; opacity: 0.3; font-style: italic; }
+      @keyframes tactical-pulse { 0%, 100% { transform: scaleY(1); opacity: 1; } 50% { transform: scaleY(0.4); opacity: 0.4; } }
+    </style>
+    <div class="loading-shell">
+      <div class="pulse-core"></div>
+      <div class="loading-label">SYSTCOACH // INICIALIZANDO</div>
+    </div>
+  </app-root>
 </body>
 </html>

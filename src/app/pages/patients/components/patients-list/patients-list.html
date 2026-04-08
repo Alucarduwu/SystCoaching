@@ -1,0 +1,97 @@
+<div class="elite-page-shell animate-fade-in h-full flex flex-col overflow-hidden">
+  
+  <!-- UNIFIED ELITE HEADER -->
+  <header class="flex items-center justify-between p-10 bg-transparent border-b border-white/5 relative z-20 shrink-0">
+    <div class="flex items-center gap-6">
+      <div class="w-1.5 h-12 bg-red-600 rounded-full shadow-[0_0_20px_rgba(239,68,68,0.4)]"></div>
+      <div class="flex flex-col gap-1">
+        <h3 class="text-4xl font-black text-white italic uppercase tracking-tighter leading-none">Clientes Activos</h3>
+        <p class="text-[10px] font-black text-white/30 uppercase tracking-[0.4em] italic mt-1 pl-1">Biblioteca Biométrica de Alto Rendimiento</p>
+      </div>
+    </div>
+
+    <!-- Stats & Filters -->
+    <div class="flex items-center gap-8">
+      <!-- Quick Stats -->
+      <div class="hidden xl:flex items-center gap-8 mr-4">
+        <div class="flex flex-col">
+          <span class="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">TOTAL EXPEDIENTES</span>
+          <span class="text-xl font-black text-white italic tracking-tighter">{{ patients.length }} <span class="text-[9px] text-red-500 ml-1">ACTIVOS</span></span>
+        </div>
+        <div class="w-px h-8 bg-white/5"></div>
+        <div class="flex flex-col">
+          <span class="text-[8px] font-black text-white/20 uppercase tracking-widest mb-1">ALTA PRIORIDAD</span>
+          <span class="text-xl font-black text-white italic tracking-tighter">PREMIUM</span>
+        </div>
+      </div>
+
+      <!-- Search & Meta Filter -->
+      <div class="flex items-center gap-4">
+        <!-- Search -->
+        <div class="relative w-72 group">
+          <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20 group-focus-within:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+          <input
+            type="text"
+            class="w-full h-12 pl-12 pr-6 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black text-white placeholder:text-white/20 focus:outline-none focus:border-red-500/30 transition-all uppercase tracking-[0.2em] italic"
+            [ngModel]="search"
+            (ngModelChange)="searchChange.emit($event)"
+            placeholder="LOCALIZAR ATLETA..."
+          />
+        </div>
+
+        <!-- Meta/Objective Dropdown -->
+        <div class="relative group">
+          <select 
+            [ngModel]="objectiveFilter" 
+            (ngModelChange)="objectiveFilterChange.emit($event)"
+            class="h-12 pl-6 pr-10 bg-white/[0.03] border border-white/10 rounded-xl text-[10px] font-black text-white/60 uppercase tracking-widest cursor-pointer hover:bg-white/[0.05] transition-all outline-none appearance-none italic min-w-[180px]"
+          >
+            <option *ngFor="let opt of metaObjectives" [value]="opt.value" class="bg-gray-900 text-white">{{ opt.label }}</option>
+          </select>
+          <svg class="absolute right-4 top-1/2 -translate-y-1/2 w-3 h-3 text-white/20 pointer-events-none group-hover:text-red-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" /></svg>
+        </div>
+
+        <button
+          type="button"
+          (click)="createPatient.emit()"
+          class="h-12 px-8 rounded-xl bg-red-600 text-white font-black text-[11px] uppercase tracking-widest hover:bg-white hover:text-black transition-all shadow-2xl active:scale-95 flex items-center gap-3 italic whitespace-nowrap"
+        >
+          <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path d="M12 4.5v15m7.5-7.5h-15" stroke-linecap="round" stroke-linejoin="round" stroke-width="3" />
+          </svg>
+          Nueva Alta
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Scrollable Area -->
+  <div class="elite-scroll-content flex-1 p-10 relative overflow-y-auto custom-scroll">
+    <div class="animate-fade-in relative z-10 pb-20">
+      
+      <!-- Empty State -->
+      <div *ngIf="!loading && patients.length === 0" class="py-40 flex flex-col items-center justify-center gap-5">
+        <div class="w-20 h-20 rounded-full bg-white/[0.01] border border-dashed border-white/10 flex items-center justify-center text-3xl opacity-20 group-hover:opacity-100 transition-opacity">
+          🔍
+        </div>
+        <p class="text-[11px] font-black text-white/20 uppercase tracking-[0.4em] italic">No se han localizado protocolos para este segmento</p>
+      </div>
+
+      <!-- Grid of Cards -->
+      <div *ngIf="!loading && patients.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <app-patient-card
+          *ngFor="let patient of patients"
+          [patient]="patient"
+          (view)="viewPatient.emit($event)"
+          (delete)="deletePatient.emit($event)">
+        </app-patient-card>
+      </div>
+
+      <!-- Loading State -->
+      <div *ngIf="loading" class="py-32 flex flex-col items-center justify-center gap-4">
+        <div class="w-10 h-10 border-2 border-white/5 border-t-red-600 rounded-full animate-spin"></div>
+        <p class="text-[10px] font-black text-white/30 uppercase tracking-widest mt-2 italic shadow-2xl">Sincronizando expedientes finales...</p>
+      </div>
+    </div>
+  </div>
+</div>

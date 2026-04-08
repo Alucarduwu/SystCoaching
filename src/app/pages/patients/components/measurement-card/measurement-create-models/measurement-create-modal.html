@@ -1,0 +1,164 @@
+<div class="modal-backdrop p-4 md:p-6" *ngIf="open" (click)="close.emit()">
+  <div class="modal-window max-w-4xl bg-[#0d0d0d] border border-white/5 shadow-2xl relative overflow-hidden" (click)="$event.stopPropagation()">
+    
+    <!-- UNIFIED SLIM HEADER -->
+    <header class="p-6 border-b border-white/5 flex items-center justify-between shrink-0 bg-[#0a0a0a]">
+      <div class="flex items-center gap-4">
+        <div class="w-1.5 h-6 bg-emerald-500 rounded-full shadow-glow"></div>
+        <div class="flex flex-col">
+          <h2 class="text-lg font-black text-white italic uppercase tracking-tighter leading-none">
+            {{ isEditing ? 'Actualizar Registro' : 'Nueva Evaluación' }}
+          </h2>
+          <p class="text-[8px] font-black text-white/20 uppercase tracking-[0.3em] mt-0.5 italic">Sincronización Biométrica</p>
+        </div>
+      </div>
+      <button type="button" class="w-9 h-9 rounded-xl bg-white/5 flex items-center justify-center text-white/40 hover:bg-emerald-600 hover:text-white transition-all shadow-xl" (click)="close.emit()">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-linecap="round" stroke-linejoin="round" stroke-width="3"/></svg>
+      </button>
+    </header>
+
+    <div class="modal-content p-6 md:p-8 flex flex-col gap-10 custom-scroll bg-[#0d0d0d] flex-1 overflow-y-auto">
+      
+      <!-- Core Metrics -->
+      <section class="flex flex-col gap-6">
+        <span class="pro-section-label">INDICADORES CLAVE</span>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="md:col-span-2">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-blue-500"></div>
+              <label class="pro-input-label">Fecha del Pesaje</label>
+              <input type="date" name="fecha" [(ngModel)]="form.fecha" [max]="today" class="pro-input-value !text-lg bg-transparent">
+            </div>
+          </div>
+          <div class="md:col-span-2">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-red-600"></div>
+              <label class="pro-input-label">Peso Total (kg)</label>
+              <input type="number" name="peso" [(ngModel)]="form.peso_kg" (ngModelChange)="fieldChange.emit()" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-blue-400"></div>
+              <label class="pro-input-label">Grasa (%)</label>
+              <input type="number" name="grasa" [(ngModel)]="form.grasa_corporal" (ngModelChange)="fieldChange.emit()" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-orange-500"></div>
+              <label class="pro-input-label">IMC (calc)</label>
+              <input type="number" name="imc" [(ngModel)]="form.imc" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-emerald-500"></div>
+              <label class="pro-input-label">Masa Magra (calc)</label>
+              <input type="number" name="magra" [(ngModel)]="form.masa_magra" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-emerald-600"></div>
+              <label class="pro-input-label">Masa Muscular (kg)</label>
+              <input type="number" name="muscular" [(ngModel)]="form.masa_muscular" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-yellow-500"></div>
+              <label class="pro-input-label">Fuerza Total (%)</label>
+              <input type="number" name="fuerza" [(ngModel)]="form.fuerza" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-blue-600/30"></div>
+              <label class="pro-input-label">Fuerza Brazo D.</label>
+              <input type="number" name="fuerza_brazo_der" [(ngModel)]="form.fuerza_brazo_derecho" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+          <div class="md:col-span-1">
+            <div class="pro-input-container">
+              <div class="pro-input-accent bg-blue-600/30"></div>
+              <label class="pro-input-label">Fuerza Brazo I.</label>
+              <input type="number" name="fuerza_brazo_izq" [(ngModel)]="form.fuerza_brazo_izquierdo" class="pro-input-value" placeholder="0.0" step="0.1">
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Perimeters -->
+      <section class="flex flex-col gap-6">
+        <div class="flex items-center justify-between">
+          <span class="pro-section-label">MEDIDAS PERIMETRALES (CM)</span>
+          <div class="h-px bg-white/5 flex-1 ml-4"></div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="pro-input-container">
+            <label class="pro-input-label">Cuello</label>
+            <input type="number" name="cuello" [(ngModel)]="form.cuello" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Cintura</label>
+            <input type="number" name="cintura" [(ngModel)]="form.cintura" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Cadera</label>
+            <input type="number" name="cadera" [(ngModel)]="form.cadera" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Pecho</label>
+            <input type="number" name="pecho" [(ngModel)]="form.pecho_espalda" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Brazo Der.</label>
+            <input type="number" name="brazo_der" [(ngModel)]="form.brazo_derecho" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Brazo Izq.</label>
+            <input type="number" name="brazo_izq" [(ngModel)]="form.brazo_izquierdo" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Pierna Der.</label>
+            <input type="number" name="pierna_der" [(ngModel)]="form.pierna_derecha" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Pierna Izq.</label>
+            <input type="number" name="pierna_izq" [(ngModel)]="form.pierna_izquierda" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Pantorrilla D.</label>
+            <input type="number" name="pantorrilla_der" [(ngModel)]="form.pantorrilla_derecha" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+          <div class="pro-input-container">
+            <label class="pro-input-label">Pantorrilla I.</label>
+            <input type="number" name="pantorrilla_izq" [(ngModel)]="form.pantorrilla_izquierda" class="pro-input-value !text-xl" placeholder="0" step="0.1">
+          </div>
+        </div>
+      </section>
+
+      <!-- Observations -->
+      <section class="flex flex-col gap-4">
+        <div class="pro-input-container !min-h-[100px]">
+          <div class="pro-input-accent bg-slate-700"></div>
+          <label class="pro-input-label">Observaciones Logísticas</label>
+          <textarea name="notas" [(ngModel)]="form.notas" class="pro-input-value !text-sm !font-bold h-12 bg-transparent border-none outline-none resize-none" placeholder="Estado emocional, nivel de energía, calidad de sueño..."></textarea>
+        </div>
+      </section>
+    </div>
+
+    <!-- Pro Footer -->
+    <div class="modal-footer bg-[#0a0a0a] border-t border-white/5 p-6 flex justify-between items-center">
+      <p class="text-[9px] font-black text-white/10 uppercase tracking-widest italic hidden sm:block">Bio-Data sync verified via cloud</p>
+      <div class="flex items-center gap-4 w-full sm:w-auto">
+        <button type="button" class="pro-btn-cancel flex-1 sm:flex-none" (click)="close.emit()">Descartar</button>
+        <button type="button" class="pro-btn-save flex-1 sm:flex-none" [disabled]="saving" (click)="save.emit()">
+          {{ saving ? 'GUARDANDO...' : (isEditing ? 'ACTUALIZAR REGISTRO' : 'FINALIZAR EVALUACIÓN') }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
