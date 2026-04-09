@@ -111,8 +111,7 @@ JSPDF / html2canvas
 - 🚧 En proceso  
 
 ---
-
-## ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
+⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 PROJECT_DATA
 name: en: SystCoaching - Desktop Management es: SystCoaching - Gestión de Escritorio
 
@@ -148,67 +147,52 @@ repo: https://github.com/Alucarduwu/SystCoaching demo: Desktop Application
 ---
 
 ## 💎 Why SystCoaching? | ¿Por qué SystCoaching?
-
-### 🇺🇸 EN  
+EN 🇺🇸  
 SystCoaching is not just another management tool; it's a **Command Center** for high-performance coaches who demand professional excellence. It bridges the gap between raw biometric data and premium client presentation through the **Mega Dossier Engine**.
 
-### 🇲🇽 ES  
+ES 🇲🇽  
 SystCoaching no es simplemente otra herramienta de gestión; es un **Centro de Mando** para entrenadores de alto rendimiento que exigen excelencia profesional. Cierra la brecha entre los datos biométricos crudos y una presentación premium para el cliente a través del motor **Mega Dossier**.
 
----
-
 ### 🚀 Key Value Pillars | Pilares de Valor
-
-- **Ultra-Performance**: Built with Electron & Better-SQLite3 for instantaneous data access without internet dependency  
-- **Glassmorphism Design**: Premium dark-themed interface with high-end software feel  
-- **Dossier Professionalization**: Transform complex training and nutrition protocols into elegant, professional PDFs in seconds  
+- **Ultra-Performance**: Built with **Electron & Better-SQLite3** for instantaneous data access without internet dependency.
+- **Glassmorphism Design**: A premium, dark-themed interface that feels like high-end pro-software.
+- **Dossier Professionalization**: Transform complex nutrition and training protocols into elegant, printable PDFs in seconds.
 
 ---
 
 ## 🛠️ Premium Technical Stack | Stack Técnico de Élite
 
 | Tech | Role | Advantage |
-|------|------|----------|
-| Angular 21 | Frontend Framework | State-of-the-art architecture and type safety |
-| Electron | Desktop Runtime | OS-level performance |
-| Better-SQLite3 | Native Database | High-speed local persistence |
-| Tailwind CSS | Design System | Modern and consistent UI |
-| JSPDF engine | PDF Generation | High-quality report rendering |
+| --- | --- | --- |
+| **Angular 21** | Frontend Framework | State-of-the-art component architecture and type safety. |
+| **Electron** | Desktop Runtime | OS-level performance with a beautiful glassmorphic UI. |
+| **Better-SQLite3** | Native Database | The fastest SQLite driver for Node.js, ensuring zero latency. |
+| **Tailwind CSS** | Design System | Utility-first styling for a pixel-perfect, modern aesthetic. |
+| **JSPDF engine** | PDF Generation | Custom-built hybrid rendering for high-fidelity professional reports. |
 
 ---
 
 ## 🎨 Visual Identity | Identidad Visual
+EN 🇺🇸  
+The interface follows a **"Elite Tactical"** aesthetic, using deep blacks, vibrant emerald accents, and glassmorphism to convey authority and technical precision. Every interaction is designed to feel snappy and professional.
 
-### 🇺🇸 EN  
-"Elite Tactical" aesthetic — deep blacks, emerald accents, and glassmorphism to convey precision and authority.
+ES 🇲🇽  
+La interfaz sigue una estética **"Elite Tactical"**, utilizando negros profundos, acentos esmeralda vibrantes y glassmorphism para transmitir autoridad y precisión técnica. Cada interacción está diseñada para sentirse rápida y profesional.
 
-### 🇲🇽 ES  
-Estética **Elite Tactical** — negros profundos, acentos esmeralda y glassmorphism para transmitir precisión y autoridad.
-
----
-
-## 🌐 Live Demo  
+🌐 Live Demo
 👉 Desktop Application (Electron)
 
----
+🚀 Installation
+git clone https://github.com/Alucarduwu/SystCoaching.git
+cd SystCoaching
+npm install
+npm run electron-dev
 
-## 🚀 Installation
+👩💻 Author
+Anahí Lozano
 
-git clone https://github.com/Alucarduwu/SystCoaching.git  
-cd SystCoaching  
-npm install  
-npm run electron-dev  
+LinkedIn: https://www.linkedin.com/in/anahi-lozano-de-lira-a4213a187/
+Portfolio: https://portafolioanahi.vercel.app/
+Email: anahydlira@gmail.com
 
----
-
-## 👩‍💻 Author
-
-**Anahí Lozano**
-
-🔗 LinkedIn: https://www.linkedin.com/in/anahi-lozano-de-lira-a4213a187/  
-🌐 Portfolio: https://portafolioanahi.vercel.app/  
-📧 Email: anahydlira@gmail.com  
-
----
-
-💜 *Built to professionalize athlete management*
+💜 Built to professionalize athlete management
