@@ -1,9 +1,12 @@
-# ✨✨✨ SYSTCOACHING ✨✨✨
-## 🚀 Advanced Coaching Management Platform  
-### Modern Coaching & Patient Dashboard  
-#### DCC_SYSTEM — Gestión Profesional de Atletas  
+# ⚙️ SYSTCOACHING
+### 🚀 Advanced Coaching Management Platform  
+#### Enterprise Desktop System · Angular + Electron  
+Sistema profesional de escritorio para gestión de atletas  
 
-> 📊 **Estado | Status:** En proceso ✨
+---
+
+> ✨ **Modern Coaching & Patient Dashboard**  
+> 📊 **Estado | Status:** En proceso  
 
 ---
 
@@ -11,107 +14,175 @@
 
 ### 🇺🇸 EN  
 **SystCoaching** is a high-performance desktop application designed for professional coaches and health practitioners.  
-It centralizes athlete management, biometric monitoring, and professional dossier generation within a sleek, command-center interface.
+It centralizes athlete management, biometric monitoring, and professional dossier generation into a unified command-center system.
 
-Focused on:
-- Real-time data visualization  
-- Historical biometric tracking  
-- Automated professional reporting  
+🔹 Real-time data visualization  
+🔹 Historical biometric tracking  
+🔹 Automated professional reporting  
 
 ---
 
 ### 🇲🇽 ES  
 **SystCoaching** es una aplicación de escritorio de alto rendimiento diseñada para entrenadores profesionales y preparadores físicos.  
-Centraliza la gestión de atletas, el monitoreo biométrico y la generación de expedientes profesionales en una interfaz moderna tipo centro de mando.
+Centraliza la gestión de atletas, el monitoreo biométrico y la generación de expedientes profesionales en un sistema tipo centro de mando.
 
-Enfocado en:
-- Visualización de datos en tiempo real  
-- Seguimiento histórico de biometría  
-- Generación automatizada de reportes profesionales  
+🔹 Visualización de datos en tiempo real  
+🔹 Seguimiento histórico de biometría  
+🔹 Generación automatizada de reportes profesionales  
 
 ---
 
 ## 🎯 Problem | Problema
 
 ### 🇺🇸 EN  
-- Fragmented athlete data across multiple files  
-- Difficult visualization and comparison of biometric history  
-- Slow, low-impact professional reporting  
+Traditional coaching workflows:
+
+❌ Fragmented athlete data  
+❌ Poor biometric visualization  
+❌ Slow and inconsistent reporting  
+
+---
 
 ### 🇲🇽 ES  
-- Datos de atletas fragmentados en múltiples archivos  
-- Difícil visualización y comparación del historial biométrico  
-- Generación de reportes lenta y sin impacto visual  
+En el coaching profesional:
+
+❌ Datos fragmentados  
+❌ Difícil análisis biométrico  
+❌ Reportes lentos y poco profesionales  
 
 ---
 
 ## 💡 Solution | Solución
 
 ### 🇺🇸 EN  
-- **Centralized Database** → All athlete history in one secure place  
-- **Biometric Analytics** → Dynamic charts and comparison tools  
-- **Mega Dossier** → One-click professional PDF generation  
+A centralized desktop ecosystem providing:
 
-### 🇲🇽 ES  
-- **Base de Datos Centralizada** → Todo el historial en un solo lugar  
-- **Analítica Biométrica** → Gráficas dinámicas y comparativas  
-- **Mega Dossier** → PDF profesional en un clic  
+👉 Unified data management  
+👉 Advanced biometric analytics  
+👉 One-click professional dossier generation  
 
 ---
 
-## ⚙️ Tech Stack
+### 🇲🇽 ES  
+Un sistema centralizado que ofrece:
 
-Angular 21 (Latest)  
+👉 Gestión unificada de datos  
+👉 Analítica biométrica avanzada  
+👉 Generación de dossiers profesionales en un clic  
+
+---
+
+## ⚙️ Stack
+
+Angular 21  
 TypeScript  
-Electron (Desktop Integration)  
+Electron  
 Better-SQLite3  
 Tailwind CSS  
-JSPDF / html2canvas  
+JSPDF  
+html2canvas  
+
+---
+
+## 🧠 Architecture | Arquitectura
+
+SQLite (Local Database)  
+   │  
+   ▼  
+Data Services (RxJS)  
+   │  
+   ▼  
+Angular Components  
+   │  
+   ▼  
+Electron Runtime  
+   │  
+   ▼  
+Desktop Application  
 
 ---
 
 ## ✨ Features | Funcionalidades
 
 ### 🇺🇸 EN  
-- Modern list/card view for biometric records  
-- Full athlete profiles (Nutrition, Training, Biometrics)  
-- Hybrid rendering engine for professional dossiers  
-- Interactive progress tracking with history charts  
-- Secure local data persistence  
-
-### 🇲🇽 ES  
-- Vista moderna tipo lista/tarjetas  
-- Perfiles completos de atleta  
-- Motor híbrido de generación de dossiers  
-- Monitoreo interactivo del progreso  
-- Persistencia local segura  
+✔ Athlete profile management  
+✔ Biometric tracking system  
+✔ Interactive analytics dashboard  
+✔ Professional PDF dossier generation  
+✔ Offline-first desktop architecture  
 
 ---
 
-## 🧠 Architecture | Arquitectura
+### 🇲🇽 ES  
+✔ Gestión de perfiles de atleta  
+✔ Seguimiento biométrico  
+✔ Dashboard interactivo  
+✔ Generación de dossiers PDF  
+✔ Arquitectura offline-first  
+
+---
+
+## 🧩 Technical Challenges | Retos Técnicos
 
 ### 🇺🇸 EN  
-- Angular component-based architecture  
-- Electron OS-level integration  
-- Modular services with RxJS state management  
-- Centralized design tokens  
+⚡ High-density UI performance  
+⚡ Seamless PDF rendering  
+⚡ Local data persistence optimization  
+⚡ Electron + Angular integration  
+
+---
 
 ### 🇲🇽 ES  
-- Arquitectura Angular basada en componentes  
-- Integración con Electron  
-- Servicios modulares con RxJS  
-- Sistema de diseño centralizado  
+⚡ Rendimiento en UI compleja  
+⚡ Renderizado fluido de PDFs  
+⚡ Persistencia de datos local  
+⚡ Integración Electron + Angular  
+
+---
+
+## 🚀 Improvements | Mejoras
+
+### 🇺🇸 EN  
+🔹 Better UI performance  
+🔹 Improved biometric comparisons  
+🔹 Cleaner PDF templates  
+
+---
+
+### 🇲🇽 ES  
+🔹 Mejor rendimiento UI  
+🔹 Mejor comparación biométrica  
+🔹 PDFs más limpios  
+
+---
+
+## 📚 Learning | Aprendizajes
+
+### 🇺🇸 EN  
+📘 Desktop architecture  
+📘 Electron + Angular integration  
+📘 Advanced PDF generation  
+📘 Local data management  
+
+---
+
+### 🇲🇽 ES  
+📘 Arquitectura de escritorio  
+📘 Integración Electron + Angular  
+📘 Generación avanzada de PDF  
+📘 Gestión de datos local  
 
 ---
 
 ## 📊 Status | Estado
 
-- ✅ Core listo para producción  
-- 🔄 Mejoras continuas en UI/UX  
-- 🚧 En proceso  
+🟢 Core listo para producción  
+🟡 En mejora continua  
+🚧 En proceso  
 
 ---
-⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
+
+## ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 PROJECT_DATA
 name: en: SystCoaching - Desktop Management es: SystCoaching - Gestión de Escritorio
 
@@ -146,53 +217,35 @@ repo: https://github.com/Alucarduwu/SystCoaching demo: Desktop Application
 
 ---
 
-## 💎 Why SystCoaching? | ¿Por qué SystCoaching?
-EN 🇺🇸  
-SystCoaching is not just another management tool; it's a **Command Center** for high-performance coaches who demand professional excellence. It bridges the gap between raw biometric data and premium client presentation through the **Mega Dossier Engine**.
+## 💎 Why SystCoaching?
 
-ES 🇲🇽  
-SystCoaching no es simplemente otra herramienta de gestión; es un **Centro de Mando** para entrenadores de alto rendimiento que exigen excelencia profesional. Cierra la brecha entre los datos biométricos crudos y una presentación premium para el cliente a través del motor **Mega Dossier**.
-
-### 🚀 Key Value Pillars | Pilares de Valor
-- **Ultra-Performance**: Built with **Electron & Better-SQLite3** for instantaneous data access without internet dependency.
-- **Glassmorphism Design**: A premium, dark-themed interface that feels like high-end pro-software.
-- **Dossier Professionalization**: Transform complex nutrition and training protocols into elegant, printable PDFs in seconds.
+**A Command Center for high-performance coaching.**  
+Transforms raw biometric data into premium client-ready outputs.
 
 ---
 
-## 🛠️ Premium Technical Stack | Stack Técnico de Élite
-
-| Tech | Role | Advantage |
-| --- | --- | --- |
-| **Angular 21** | Frontend Framework | State-of-the-art component architecture and type safety. |
-| **Electron** | Desktop Runtime | OS-level performance with a beautiful glassmorphic UI. |
-| **Better-SQLite3** | Native Database | The fastest SQLite driver for Node.js, ensuring zero latency. |
-| **Tailwind CSS** | Design System | Utility-first styling for a pixel-perfect, modern aesthetic. |
-| **JSPDF engine** | PDF Generation | Custom-built hybrid rendering for high-fidelity professional reports. |
-
----
-
-## 🎨 Visual Identity | Identidad Visual
-EN 🇺🇸  
-The interface follows a **"Elite Tactical"** aesthetic, using deep blacks, vibrant emerald accents, and glassmorphism to convey authority and technical precision. Every interaction is designed to feel snappy and professional.
-
-ES 🇲🇽  
-La interfaz sigue una estética **"Elite Tactical"**, utilizando negros profundos, acentos esmeralda vibrantes y glassmorphism para transmitir autoridad y precisión técnica. Cada interacción está diseñada para sentirse rápida y profesional.
-
-🌐 Live Demo
+## 🌐 Demo
 👉 Desktop Application (Electron)
 
-🚀 Installation
-git clone https://github.com/Alucarduwu/SystCoaching.git
-cd SystCoaching
-npm install
-npm run electron-dev
+---
 
-👩💻 Author
-Anahí Lozano
+## 🚀 Installation
 
-LinkedIn: https://www.linkedin.com/in/anahi-lozano-de-lira-a4213a187/
-Portfolio: https://portafolioanahi.vercel.app/
-Email: anahydlira@gmail.com
+git clone https://github.com/Alucarduwu/SystCoaching.git  
+cd SystCoaching  
+npm install  
+npm run electron-dev  
+
+---
+
+## 👩‍💻 Author
+
+**Anahí Lozano**
+
+LinkedIn: https://www.linkedin.com/in/anahi-lozano-de-lira-a4213a187/  
+Portfolio: https://portafolioanahi.vercel.app/  
+Email: anahydlira@gmail.com  
+
+---
 
 💜 Built to professionalize athlete management
