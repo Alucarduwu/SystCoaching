@@ -166,8 +166,6 @@ Este proyecto proporciona un sistema centralizado con:
 <!-- Used for portfolio parsing -->
 # ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 
-<!-- Used for portfolio parsing -->
-
 ## PROJECT_DATA
 
 name:
@@ -175,16 +173,16 @@ name:
   es: SystCoaching - Plataforma de Gestión de Rendimiento
 
 description:
-  en: Enterprise-style desktop application for athlete management, combining biometric tracking, high-density analytics, and automated professional reporting
-  es: Aplicación de escritorio estilo empresarial para la gestión de atletas, combinando seguimiento biométrico, analítica de alta densidad y generación automática de reportes profesionales
+  en: Enterprise-style desktop application for athlete management, implementing full CRUD operations, biometric tracking, high-density analytics, and automated reporting pipelines
+  es: Aplicación de escritorio estilo empresarial para la gestión de atletas, implementando operaciones CRUD completas, seguimiento biométrico, analítica de alta densidad y generación automatizada de reportes
 
 problem:
-  en: Athlete data is fragmented, hard to analyze over time, and lacks structured reporting, limiting decision-making and scalability in training management
-  es: Los datos de atletas están fragmentados, son difíciles de analizar en el tiempo y carecen de reportes estructurados, limitando la toma de decisiones y la escalabilidad
+  en: Athlete data is fragmented, lacks relational structure, and is difficult to query efficiently, preventing scalable tracking and structured analysis
+  es: Los datos de atletas están fragmentados, sin estructura relacional y difíciles de consultar eficientemente, impidiendo escalabilidad y análisis estructurado
 
 solution:
-  en: Designed and developed a centralized desktop system that unifies athlete data, enables real-time tracking, and generates structured multi-page PDF reports for professional workflows
-  es: Diseño y desarrollo de un sistema de escritorio centralizado que unifica datos, permite seguimiento en tiempo real y genera reportes PDF multipágina para flujos de trabajo profesionales
+  en: Designed and implemented a centralized desktop system with normalized relational data models, full CRUD workflows, and optimized query handling for real-time athlete tracking and reporting
+  es: Diseño e implementación de un sistema centralizado con modelos relacionales normalizados, flujos CRUD completos y consultas optimizadas para seguimiento y reporteo en tiempo real
 
 stack:
   - Angular 21
@@ -195,71 +193,81 @@ stack:
 
 features:
   en:
-    - Structured biometric history management with scalable data modeling
-    - Automated multi-page PDF dossier generation (nutrition, training, biometrics)
-    - Athlete progress comparison with historical analysis
-    - High-density dashboard optimized for large datasets
-    - Local-first architecture enabling offline usage
+    - Full CRUD system for athletes, biometrics, diets, and training routines
+    - Relational data modeling with normalized SQLite schema
+    - Optimized query handling for historical biometric analysis
+    - Automated multi-entity PDF generation pipeline
+    - State-driven UI updates with reactive data binding
+    - High-density dashboard with dynamic filtering and search
   es:
-    - Gestión estructurada de historial biométrico con modelado escalable
-    - Generación automática de dossiers PDF multipágina
-    - Comparación de progreso con análisis histórico
-    - Dashboard de alta densidad optimizado para grandes volúmenes de datos
-    - Arquitectura local-first con funcionamiento offline
+    - Sistema CRUD completo para atletas, biometría, dietas y rutinas
+    - Modelado relacional con esquema normalizado en SQLite
+    - Consultas optimizadas para análisis histórico biométrico
+    - Pipeline automatizado de generación de PDF multi-entidad
+    - Actualización reactiva de UI basada en estado
+    - Dashboard con filtros y búsqueda dinámica
 
-architecture: Angular SPA integrated into Electron with SQLite-based local persistence and modular component-driven design
+architecture:
+  en: Modular Angular architecture with service-based data layer, Electron IPC communication, and SQLite persistence using repository-like patterns
+  es: Arquitectura modular en Angular con capa de servicios, comunicación IPC con Electron y persistencia en SQLite usando patrones tipo repositorio
 
 technical_challenges:
   en:
-    - Optimized rendering for high-density UI handling large datasets without performance degradation
-    - Built dynamic PDF generation pipelines ensuring layout consistency across multiple report types
-    - Implemented reliable local-first data persistence using SQLite in a desktop environment
-    - Managed state and data synchronization between UI and storage layer
+    - Designing normalized relational schemas (patients, measurements, diets, routines) with efficient joins
+    - Handling complex CRUD operations with data integrity and state synchronization
+    - Optimizing UI rendering for large datasets using efficient change detection strategies
+    - Building a dynamic PDF generation pipeline mapping relational data into structured documents
+    - Managing communication between Electron main and renderer processes
   es:
-    - Optimización de UI de alta densidad sin degradar rendimiento
-    - Construcción de pipelines dinámicos de generación de PDF con consistencia visual
-    - Implementación de persistencia local robusta con SQLite
-    - Manejo de estado y sincronización entre UI y base de datos
+    - Diseño de esquemas relacionales normalizados (pacientes, mediciones, dietas, rutinas) con joins eficientes
+    - Manejo de operaciones CRUD complejas con integridad de datos y sincronización de estado
+    - Optimización del renderizado de UI con grandes volúmenes de datos
+    - Construcción de pipeline dinámico de PDF a partir de datos relacionales
+    - Manejo de comunicación entre procesos de Electron
 
 improvements:
   en:
-    - Refactored list rendering to significantly improve performance and scalability
-    - Redesigned biometric comparison system for clearer insights and better UX
-    - Standardized PDF templates into a reusable modular system
-    - Improved UI consistency and data readability across modules
+    - Refactored data layer to separate concerns (UI / services / persistence)
+    - Optimized SQL queries reducing redundant data fetching and improving performance
+    - Implemented reusable data mappers for transforming DB data into UI models
+    - Improved state handling for consistent UI updates after CRUD operations
+    - Standardized PDF generation into reusable templates and pipelines
   es:
-    - Refactorización de listas para mejorar rendimiento y escalabilidad
-    - Rediseño del sistema de comparación biométrica para mayor claridad
-    - Estandarización de PDFs en un sistema modular reutilizable
-    - Mejora en consistencia visual y legibilidad de datos
+    - Refactorización de la capa de datos separando UI / servicios / persistencia
+    - Optimización de queries SQL reduciendo redundancias
+    - Implementación de mapeadores de datos reutilizables
+    - Mejora en manejo de estado tras operaciones CRUD
+    - Estandarización de generación de PDF en templates reutilizables
 
 learning:
   en:
-    - Advanced desktop architecture using Angular + Electron
-    - High-density data-driven UI design patterns
-    - Scalable document generation systems (PDF pipelines)
-    - Local-first application design and data persistence strategies
+    - Designing and implementing full CRUD systems in desktop environments
+    - Relational database modeling and query optimization (SQLite)
+    - Applying separation of concerns and modular architecture patterns
+    - Managing state-driven UIs with reactive frameworks
+    - Building document pipelines from structured relational data
   es:
-    - Arquitectura avanzada de escritorio con Angular + Electron
-    - Patrones de UI orientados a datos de alta densidad
-    - Sistemas escalables de generación de documentos (PDF)
-    - Estrategias de persistencia y arquitectura local-first
+    - Diseño e implementación de sistemas CRUD completos en desktop
+    - Modelado relacional y optimización de queries en SQLite
+    - Aplicación de separación de responsabilidades y arquitectura modular
+    - Manejo de UI reactiva basada en estado
+    - Construcción de pipelines de documentos a partir de datos estructurados
 
 status:
-  en: In Progress (Actively evolving with continuous improvements)
-  es: En proceso (Evolución activa con mejoras continuas)
+  en: In Progress (Actively evolving with continuous architectural improvements)
+  es: En proceso (Evolución activa con mejoras arquitectónicas continuas)
 
 future:
   en:
-    - AI-based predictive performance analysis
-    - Cloud synchronization and multi-device support
-    - Advanced analytics dashboards with data visualization
-    - Role-based multi-user system
+    - Migration to API-based backend (Node.js / REST)
+    - Implementation of authentication and role-based access control (RBAC)
+    - Cloud sync with distributed data storage
+    - Integration of AI models for predictive analytics
   es:
-    - Análisis predictivo con IA
-    - Sincronización en la nube y soporte multi-dispositivo
-    - Dashboards avanzados de analítica
-    - Sistema multiusuario con roles
+    - Migración a backend basado en APIs (Node.js / REST)
+    - Implementación de autenticación y control de roles (RBAC)
+    - Sincronización en la nube
+    - Integración de IA para análisis predictivo
 
 repo: https://github.com/Alucarduwu/SystCoaching
 demo: Desktop Application
