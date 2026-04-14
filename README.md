@@ -163,9 +163,6 @@ Este proyecto proporciona un sistema centralizado con:
 - In Progress / En proceso  
 
 ---
-
-# ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
-
 <!-- Used for portfolio parsing -->
 # ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 
