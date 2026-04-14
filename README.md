@@ -166,23 +166,25 @@ Este proyecto proporciona un sistema centralizado con:
 <!-- Used for portfolio parsing -->
 # ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 
+<!-- Used for portfolio parsing -->
+
 ## PROJECT_DATA
 
 name:
-  en: SystCoaching - Desktop Performance Management
-  es: SystCoaching - Plataforma de Gestión de Rendimiento Deportivo
+  en: SystCoaching - Desktop Performance Platform
+  es: SystCoaching - Plataforma de Gestión de Rendimiento
 
 description:
-  en: High-performance desktop platform for athlete management, integrating biometric tracking, analytics, and automated professional reporting
-  es: Plataforma de escritorio de alto rendimiento para la gestión de atletas, integrando seguimiento biométrico, analítica y generación automatizada de reportes profesionales
+  en: Enterprise-style desktop application for athlete management, combining biometric tracking, high-density analytics, and automated professional reporting
+  es: Aplicación de escritorio estilo empresarial para la gestión de atletas, combinando seguimiento biométrico, analítica de alta densidad y generación automática de reportes profesionales
 
 problem:
-  en: Disconnected athlete data across multiple sources, leading to inefficient tracking, poor decision-making, and lack of actionable insights
-  es: Datos de atletas dispersos en múltiples fuentes, generando seguimiento ineficiente, mala toma de decisiones y falta de insights accionables
+  en: Athlete data is fragmented, hard to analyze over time, and lacks structured reporting, limiting decision-making and scalability in training management
+  es: Los datos de atletas están fragmentados, son difíciles de analizar en el tiempo y carecen de reportes estructurados, limitando la toma de decisiones y la escalabilidad
 
 solution:
-  en: Centralized desktop system that unifies athlete data, enables real-time biometric analysis, and generates structured, client-ready PDF dossiers
-  es: Sistema de escritorio centralizado que unifica datos de atletas, permite análisis biométrico en tiempo real y genera dossiers PDF estructurados listos para uso profesional
+  en: Designed and developed a centralized desktop system that unifies athlete data, enables real-time tracking, and generates structured multi-page PDF reports for professional workflows
+  es: Diseño y desarrollo de un sistema de escritorio centralizado que unifica datos, permite seguimiento en tiempo real y genera reportes PDF multipágina para flujos de trabajo profesionales
 
 stack:
   - Angular 21
@@ -193,61 +195,71 @@ stack:
 
 features:
   en:
-    - Scalable biometric history tracking with structured data modeling
+    - Structured biometric history management with scalable data modeling
     - Automated multi-page PDF dossier generation (nutrition, training, biometrics)
-    - Comparative analytics for athlete progress evaluation
+    - Athlete progress comparison with historical analysis
+    - High-density dashboard optimized for large datasets
+    - Local-first architecture enabling offline usage
   es:
-    - Seguimiento escalable de historial biométrico con modelado estructurado de datos
-    - Generación automatizada de dossiers PDF multipágina (nutrición, entrenamiento, biometría)
-    - Analítica comparativa para evaluación del progreso de atletas
+    - Gestión estructurada de historial biométrico con modelado escalable
+    - Generación automática de dossiers PDF multipágina
+    - Comparación de progreso con análisis histórico
+    - Dashboard de alta densidad optimizado para grandes volúmenes de datos
+    - Arquitectura local-first con funcionamiento offline
 
-architecture:
-  en: Angular SPA embedded in Electron with local SQLite persistence layer
-  es: Aplicación Angular embebida en Electron con capa de persistencia local en SQLite
+architecture: Angular SPA integrated into Electron with SQLite-based local persistence and modular component-driven design
 
 technical_challenges:
   en:
-    - Optimizing high-density UI rendering for large datasets without performance degradation
-    - Designing dynamic PDF generation pipelines with consistent layouts
-    - Implementing reliable local-first data persistence in a desktop environment
+    - Optimized rendering for high-density UI handling large datasets without performance degradation
+    - Built dynamic PDF generation pipelines ensuring layout consistency across multiple report types
+    - Implemented reliable local-first data persistence using SQLite in a desktop environment
+    - Managed state and data synchronization between UI and storage layer
   es:
-    - Optimización de UI de alta densidad para grandes volúmenes de datos sin degradar el rendimiento
-    - Diseño de pipelines dinámicos de generación de PDF con consistencia visual
-    - Implementación de persistencia local robusta en entorno desktop
+    - Optimización de UI de alta densidad sin degradar rendimiento
+    - Construcción de pipelines dinámicos de generación de PDF con consistencia visual
+    - Implementación de persistencia local robusta con SQLite
+    - Manejo de estado y sincronización entre UI y base de datos
 
 improvements:
   en:
-    - Refactored list rendering to improve scalability and UI performance
-    - Redesigned biometric comparison system for clearer progress visualization
-    - Standardized PDF templates into a modular and reusable system
+    - Refactored list rendering to significantly improve performance and scalability
+    - Redesigned biometric comparison system for clearer insights and better UX
+    - Standardized PDF templates into a reusable modular system
+    - Improved UI consistency and data readability across modules
   es:
-    - Refactorización del renderizado de listas para mejorar escalabilidad y rendimiento
-    - Rediseño del sistema de comparación biométrica para mejor visualización del progreso
-    - Estandarización de plantillas PDF en un sistema modular reutilizable
+    - Refactorización de listas para mejorar rendimiento y escalabilidad
+    - Rediseño del sistema de comparación biométrica para mayor claridad
+    - Estandarización de PDFs en un sistema modular reutilizable
+    - Mejora en consistencia visual y legibilidad de datos
 
 learning:
   en:
-    - Advanced Angular and Electron integration patterns
-    - High-density data-driven UI design
-    - Scalable document generation (PDF pipelines)
+    - Advanced desktop architecture using Angular + Electron
+    - High-density data-driven UI design patterns
+    - Scalable document generation systems (PDF pipelines)
+    - Local-first application design and data persistence strategies
   es:
-    - Patrones avanzados de integración Angular y Electron
-    - Diseño de interfaces orientadas a datos de alta densidad
-    - Generación escalable de documentos (PDF)
+    - Arquitectura avanzada de escritorio con Angular + Electron
+    - Patrones de UI orientados a datos de alta densidad
+    - Sistemas escalables de generación de documentos (PDF)
+    - Estrategias de persistencia y arquitectura local-first
 
 status:
-  en: In Progress
-  es: En proceso
+  en: In Progress (Actively evolving with continuous improvements)
+  es: En proceso (Evolución activa con mejoras continuas)
 
 future:
   en:
     - AI-based predictive performance analysis
-    - Cloud synchronization and backup
-    - Advanced analytics dashboards
+    - Cloud synchronization and multi-device support
+    - Advanced analytics dashboards with data visualization
+    - Role-based multi-user system
   es:
     - Análisis predictivo con IA
-    - Sincronización en la nube
+    - Sincronización en la nube y soporte multi-dispositivo
     - Dashboards avanzados de analítica
+    - Sistema multiusuario con roles
 
 repo: https://github.com/Alucarduwu/SystCoaching
 demo: Desktop Application
