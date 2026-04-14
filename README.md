@@ -167,89 +167,91 @@ Este proyecto proporciona un sistema centralizado con:
 # ⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
 
 <!-- Used for portfolio parsing -->
-
-## PROJECT_DATA
+⚙️ SYSTEM DATA (DO NOT EDIT FORMAT)
+PROJECT_DATA
 
 name:
-  en: SystCoaching - Desktop Management
-  es: SystCoaching - Gestión de Escritorio
+en: SystCoaching - Desktop Performance Management
+es: SystCoaching - Plataforma de Gestión de Rendimiento Deportivo
 
 description:
-  en: Professional athlete management system with biometric tracking and PDF generation
-  es: Sistema profesional de gestión de atletas con seguimiento biométrico y generación de PDF
+en: High-performance desktop platform for athlete management, integrating biometric tracking, analytics, and automated professional reporting
+es: Plataforma de escritorio de alto rendimiento para la gestión de atletas, integrando seguimiento biométrico, analítica y generación automatizada de reportes profesionales
 
 problem:
-  en: Fragmented athlete records and poor progress visualization
-  es: Registros de atletas fragmentados y visualización de progreso deficiente
+en: Disconnected athlete data across multiple sources, leading to inefficient tracking, poor decision-making, and lack of actionable insights
+es: Datos de atletas dispersos en múltiples fuentes, generando seguimiento ineficiente, mala toma de decisiones y falta de insights accionables
 
 solution:
-  en: Centralized desktop dashboard with professional dossier generation
-  es: Panel de control de escritorio centralizado con generación de dossier profesional
+en: Engineered a centralized desktop system that unifies athlete data, enables real-time biometric analysis, and generates structured, client-ready PDF dossiers for professional use
+es: Desarrollo de un sistema de escritorio centralizado que unifica datos de atletas, permite análisis biométrico en tiempo real y genera dossiers PDF estructurados listos para uso profesional
 
 stack:
-  - Angular 21
-  - Electron
-  - TypeScript
-  - SQLite
-  - JSPDF
+
+Angular 21
+Electron
+TypeScript
+SQLite
+JSPDF
 
 features:
-  en:
-    - Biometric History
-    - Professional PDF Dossier
-    - Athlete Analytics
-  es:
-    - Historial Biométrico
-    - Dossier PDF Profesional
-    - Analítica de Atletas
+en:
+- Scalable biometric history tracking with structured data modeling
+- Automated multi-page PDF dossier generation (nutrition, training, biometrics)
+- Comparative analytics for athlete progress evaluation
+es:
+- Seguimiento escalable de historial biométrico con modelado estructurado de datos
+- Generación automatizada de dossiers PDF multipágina (nutrición, entrenamiento, biometría)
+- Analítica comparativa para evaluación del progreso de atletas
 
-architecture: Angular + Electron Desktop App
+architecture: Angular (frontend SPA) embedded in Electron shell with local SQLite persistence layer
 
 technical_challenges:
-  en:
-    - High-density UI performance
-    - Seamless PDF rendering
-    - Local data persistence
-  es:
-    - Rendimiento de UI de alta densidad
-    - Renderizado impecable de PDF
-    - Persistencia de datos local
+en:
+- Optimizing high-density UI rendering for large datasets without degrading performance
+- Designing dynamic PDF generation pipelines with consistent layout across multiple report types
+- Implementing reliable local-first data persistence with SQLite in a desktop environment
+es:
+- Optimización de renderizado de UI de alta densidad para grandes volúmenes de datos sin degradar el rendimiento
+- Diseño de pipelines dinámicos de generación de PDF con consistencia visual en múltiples tipos de reporte
+- Implementación de persistencia local robusta usando SQLite en entorno desktop
 
 improvements:
-  en:
-    - Optimized list view
-    - Better biometric comparison
-    - Cleaner PDF templates
-  es:
-    - Vista de lista optimizada
-    - Mejor comparación biométrica
-    - Plantillas de PDF más limpias
+en:
+- Refactored list rendering to improve performance and scalability for large athlete datasets
+- Redesigned biometric comparison system to enable clearer progress visualization and historical analysis
+- Standardized PDF templates into a modular system, improving readability and professional output consistency
+es:
+- Refactorización del renderizado de listas para mejorar rendimiento y escalabilidad con grandes volúmenes de atletas
+- Rediseño del sistema de comparación biométrica para una visualización más clara del progreso y análisis histórico
+- Estandarización de plantillas PDF en un sistema modular, mejorando legibilidad y consistencia profesional
 
 learning:
-  en:
-    - Electron/Angular integration
-    - Advanced PDF generation
-    - Desktop data management
-  es:
-    - Integración Electron/Angular
-    - Generación avanzada de PDF
-    - Gestión de datos en escritorio
+en:
+- Advanced integration patterns between Angular and Electron for desktop applications
+- Designing data-driven UI systems optimized for high-density information display
+- Building document-generation engines for structured reporting (PDF pipelines)
+es:
+- Patrones avanzados de integración entre Angular y Electron para aplicaciones de escritorio
+- Diseño de sistemas UI orientados a datos optimizados para alta densidad de información
+- Construcción de motores de generación documental para reportes estructurados (PDF)
 
 status:
-  en: In Progress
-  es: En proceso
+en: In Progress (Active Development with Continuous UI/UX and Performance Enhancements)
+es: En proceso (Desarrollo activo con mejoras continuas en UI/UX y rendimiento)
 
 future:
-  en:
-    - Advanced analytics
-    - AI-driven progress prediction
-    - Cloud sync
-  es:
-    - Analítica avanzada
-    - Predicción de progreso con IA
-    - Sincronización en la nube
+en:
+- Integration of AI models for predictive performance analysis
+- Cloud synchronization for multi-device access and backup
+- Advanced analytics dashboards with data visualization modules
+es:
+- Integración de modelos de IA para análisis predictivo de rendimiento
+- Sincronización en la nube para acceso multi-dispositivo y respaldo
+- Dashboards avanzados con módulos de visualización de datos
 
 repo: https://github.com/Alucarduwu/SystCoaching
+
 demo: Desktop Application
 
 ---
